@@ -1094,18 +1094,20 @@ h2.page-title span {
 .data-table tr:hover { background: rgba(255, 255, 255, 0.015); }
 .data-table tr:last-child td { border-bottom: none; }
 
-.tactical-layout { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+.tactical-layout { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
 
 #tacticalBoardWrapper {
     position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
     width: 100%;
-    max-width: 850px;
-    height: 480px;
+    /* height is set dynamically by JS (resizeCanvas) */
+    min-height: 260px;
     border: 3px solid #1a1a1a;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 80px rgba(0, 0, 0, 0.15);
-    transition: max-width 0.4s ease, height 0.4s ease;
+    transition: height 0.4s ease;
 }
 
 #courtBackground {
@@ -1186,13 +1188,14 @@ h2.page-title span {
     background: var(--bg-panel);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 20px;
-    width: 280px;
+    padding: 16px;
+    width: 220px;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     gap: 6px;
     overflow-y: auto;
-    max-height: 540px;
+    max-height: 560px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -1498,31 +1501,117 @@ input[type=range]#vaTimeline::-webkit-slider-thumb {
 /* --- MOBİL VE TABLET UYUMU (RESPONSIVE) --- */
 @media (max-width: 1024px) {
     #app-wrapper { flex-direction: column; }
-    .sidebar { position: fixed; top: 0; left: -320px; height: 100vh; width: 280px; transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 10px 0 30px rgba(0, 0, 0, 0.8); z-index: 10000; -webkit-overflow-scrolling: touch; }
+    .sidebar {
+        position: fixed; top: 0; left: -320px;
+        height: 100vh; width: 280px;
+        transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.8);
+        z-index: 10000;
+        -webkit-overflow-scrolling: touch;
+    }
     .sidebar.open { left: 0; }
     .main-content { padding: 15px; padding-top: 75px; }
     #mobileMenuBtn { display: flex !important; }
     .toolbar { justify-content: flex-start; }
+
+    /* ─── DASHBOARD iPad ─── */
+    .dash-stats-row { grid-template-columns: repeat(2, 1fr); }
+    .dash-two-col { grid-template-columns: 1fr; }
+    .dash-bottom-row { grid-template-columns: 1fr; }
+    .dash-quick-grid { grid-template-columns: repeat(3, 1fr); }
+    h2.page-title { font-size: 20px; flex-direction: column; align-items: flex-start; gap: 10px; }
+    h2.page-title > div:last-child { flex-wrap: wrap; gap: 8px; width: 100%; }
+
+    /* ─── TACTICAL PAD iPad ─── */
+    .tactical-layout { flex-direction: column; }
+    .formations-panel {
+        width: 100%;
+        max-height: none;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 12px;
+    }
+    .formations-panel h4 { width: 100%; margin-top: 6px; }
+    .formations-panel .btn { width: auto; flex: 1 1 140px; font-size: 11px; padding: 7px 8px; }
+    #courtCanvas { touch-action: none; }
+
+    /* ─── MATCHES iPad ─── */
+    .toolbar[style*="flex-wrap: wrap"] { gap: 8px; }
+
+    /* ─── PLAYBOOK toolbar iPad ─── */
+    .toolbar[style*="flex-wrap: nowrap"] { flex-wrap: wrap !important; }
+
+    /* ─── ADD PLAYER / PROFILE iPad ─── */
+    .add-player-layout { flex-direction: column; }
+    .add-form { min-width: 0; width: 100%; }
+    .preview-panel { width: 100%; }
 }
 
 #mobileMenuBtn {
-    display: none; position: fixed; top: 15px; left: 15px; z-index: 9998; background: rgba(30, 30, 36, 0.85); backdrop-filter: blur(12px); color: #fff; border: 1px solid var(--border-color); border-radius: 12px; width: 48px; height: 48px; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); transition: 0.3s;
+    display: none;
+    position: fixed; top: 15px; left: 15px;
+    z-index: 9998;
+    background: rgba(30, 30, 36, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    width: 48px; height: 48px;
+    align-items: center; justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    transition: 0.3s;
 }
 #mobileMenuBtn:hover { color: var(--primary-orange); border-color: var(--primary-orange); }
-#mobileMenuOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); z-index: 9999; opacity: 0; transition: opacity 0.4s ease; }
+#mobileMenuOverlay {
+    display: none; position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 9999; opacity: 0;
+    transition: opacity 0.4s ease;
+}
 #mobileMenuOverlay.active { display: block; opacity: 1; }
 
+/* ─── Elite Dropdown ─── */
 .elite-dropdown-group {
-    display: flex; gap: 10px; align-items: center; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); padding: 4px 12px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); position: relative; z-index: 1000;
+    display: flex; gap: 10px; align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 4px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative; z-index: 1000;
 }
 .elite-select-container { position: relative; min-width: 80px; }
-.elite-select-trigger { display: flex; align-items: center; justify-content: space-between; gap: 8px; cursor: pointer; padding: 6px 10px; border-radius: 10px; background: transparent; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); user-select: none; }
+.elite-select-trigger {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; cursor: pointer; padding: 6px 10px;
+    border-radius: 10px; background: transparent;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none; -webkit-user-select: none;
+}
 .elite-select-trigger:hover { background: rgba(255, 255, 255, 0.05); }
 .elite-select-trigger span { font-size: 14px; font-weight: 800; color: var(--primary-orange); letter-spacing: 0.5px; }
 .elite-select-trigger i { font-size: 10px; color: var(--text-muted); transition: transform 0.3s ease; }
 .elite-select-container.open .elite-select-trigger i { transform: rotate(180deg); }
 .elite-select-menu {
-    position: absolute; top: calc(100% + 8px); left: 0; width: 100%; min-width: 120px; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; display: none; z-index: 9999; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05); animation: dropdownFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; backdrop-filter: blur(30px);
+    position: absolute; top: calc(100% + 8px); left: 0;
+    width: 100%; min-width: 120px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 12px; overflow: hidden;
+    display: none; z-index: 9999;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    animation: dropdownFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
 }
 @keyframes dropdownFadeIn { 0% { opacity: 0; transform: translateY(-10px); } 100% { opacity: 1; transform: translateY(0); } }
 .elite-select-container.open { z-index: 10001; }
@@ -1533,4 +1622,52 @@ input[type=range]#vaTimeline::-webkit-slider-thumb {
 .elite-select-option.selected { background: rgba(255, 107, 0, 0.15); color: var(--primary-orange); font-weight: 800; }
 .elite-gender-icon { font-size: 18px; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: rgba(0, 0, 0, 0.2); border-radius: 8px; transition: all 0.3s; }
 
-@media (max-width: 600px) { .elite-dropdown-group { padding: 2px 8px; } .elite-select-trigger span { font-size: 12px; } }
+/* ─── TABLET (600-1024px) ─── */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .login-box { width: 90%; max-width: 420px; padding: 40px 35px; }
+    .main-content { padding: 15px 20px; padding-top: 80px; }
+    .grid-container { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+    .dash-quick-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ─── KÜÇÜK EKRAN (≤600px) ─── */
+@media (max-width: 600px) {
+    .elite-dropdown-group { padding: 2px 8px; gap: 6px; }
+    .elite-select-trigger span { font-size: 12px; }
+    .login-box { width: 95%; padding: 30px 20px; }
+    .login-box h1 { font-size: 28px; letter-spacing: 3px; }
+    .dash-stats-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .dash-quick-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .toolbar { padding: 12px; gap: 8px; }
+    .btn { padding: 8px 12px; font-size: 12px; }
+    h2.page-title { font-size: 18px; }
+    .formations-panel .btn { flex: 1 1 120px; font-size: 10px; }
+    .calendar-grid { gap: 4px; }
+    .cal-day { min-height: 70px; padding: 6px; }
+    .cal-date { font-size: 12px; }
+    .cal-event { font-size: 9px; padding: 4px 6px; }
+}
+
+/* ─── CANVAS - DOKUNMATIK ─── */
+#courtCanvas {
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* ─── DRAGGABLE PIECE - DOKUNMATIK BOYUT ─── */
+@media (max-width: 1024px) {
+    .draggable-piece {
+        width: 40px;
+        height: 40px;
+        font-size: 15px;
+    }
+    .rotate-handle {
+        width: 18px;
+        height: 18px;
+        top: -25px;
+    }
+    /* Rotate handle'ı iPad'de her zaman görünür yap */
+    .draggable-piece .rotate-handle { opacity: 0.7; }
+}

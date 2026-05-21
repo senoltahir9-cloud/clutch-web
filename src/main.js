@@ -82,21 +82,36 @@ window.deleteEvent = deleteEvent;
 window.deletePlaybookItem = deletePlaybookItem;
 window.filterPlaybook = filterPlaybook;
 
+// Tactical Board global wrappers (HTML inline onclick'ler için)
+window.setDrawType = (type, btn) => {
+    if (window.tacticalBoard) window.tacticalBoard.setDrawType(type, btn);
+};
+window.addPiece = (text, type) => {
+    if (window.tacticalBoard) window.tacticalBoard.addPiece(text, type);
+};
+window.clearBoard = () => {
+    if (window.tacticalBoard) window.tacticalBoard.clearBoard();
+};
+window.applyFormation = (name) => {
+    if (window.tacticalBoard) window.tacticalBoard.applyFormation(name);
+};
+
 const renderCallbacks = {
     'profile': renderProfile,
     'calendar': renderCalendar,
     'playbook': renderPlaybook,
     'dashboard': renderDashboardData,
     'tactical': () => {
-        if (!window.tacticalBoard) {
-            const canvas = document.getElementById('courtCanvas');
-            const draggables = document.getElementById('draggablesContainer');
-            const board = document.getElementById('tacticalBoardWrapper');
-            if (canvas && draggables && board) {
+        const canvas = document.getElementById('courtCanvas');
+        const draggables = document.getElementById('draggablesContainer');
+        const board = document.getElementById('tacticalBoardWrapper');
+        if (canvas && draggables && board) {
+            if (!window.tacticalBoard) {
                 window.tacticalBoard = initTacticalBoard(canvas, draggables, board);
+            } else {
+                window.tacticalBoard.resize();
+                window.tacticalBoard.render();
             }
-        } else {
-            window.tacticalBoard.render();
         }
     }
 };

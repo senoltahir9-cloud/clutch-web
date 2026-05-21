@@ -11,8 +11,69 @@ let selectedObject = null;
 let selectedHandle = null;
 let dragStartX, dragStartY;
 
+// ─── Touch/Mouse birleştirici yardımcılar ──────────────────────────────────
+function getEventPos(e, canvas) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+
+    if (e.touches && e.touches.length > 0) {
+        return {
+            x: (e.touches[0].clientX - rect.left) * scaleX,
+            y: (e.touches[0].clientY - rect.top) * scaleY
+        };
+    } else if (e.changedTouches && e.changedTouches.length > 0) {
+        return {
+            x: (e.changedTouches[0].clientX - rect.left) * scaleX,
+            y: (e.changedTouches[0].clientY - rect.top) * scaleY
+        };
+    }
+    return {
+        x: e.offsetX * scaleX,
+        y: e.offsetY * scaleY
+    };
+}
+
+function getPieceEventPos(e, boardWrapper) {
+    const rect = boardWrapper.getBoundingClientRect();
+    if (e.touches && e.touches.length > 0) {
+        return {
+            x: e.touches[0].clientX - rect.left,
+            y: e.touches[0].clientY - rect.top
+        };
+    } else if (e.changedTouches && e.changedTouches.length > 0) {
+        return {
+            x: e.changedTouches[0].clientX - rect.left,
+            y: e.changedTouches[0].clientY - rect.top
+        };
+    }
+    return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+    };
+}
+
 export function initTacticalBoard(canvas, draggablesContainer, boardWrapper) {
     const ctx = canvas.getContext('2d');
+
+    // ── Canvas'ı kapsayıcıya göre yeniden boyutlandır ──
+    function resizeCanvas() {
+        const wrapper = canvas.parentElement;
+        if (!wrapper) return;
+        const w = wrapper.clientWidth;
+        const aspect = canvas.dataset.courtType === 'full-vertical' ? (4 / 3) : (16 / 9);
+        const h = Math.round(w / aspect);
+        if (canvas.width !== w || canvas.height !== h) {
+            canvas.width = w;
+            canvas.height = h;
+            wrapper.style.height = h + 'px';
+        }
+        renderTacticalCanvas();
+    }
+
+    // İlk boyutlandırma
+    setTimeout(resizeCanvas, 50);
+    window.addEventListener('resize', resizeCanvas);
 
     function renderTacticalCanvas() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -34,7 +95,7 @@ export function initTacticalBoard(canvas, draggablesContainer, boardWrapper) {
 
         points.forEach(p => {
             ctx.beginPath();
-            ctx.arc(p.x, p.y, p.type === 'cp' ? 5 : 6, 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, p.type === 'cp' ? 7 : 9, 0, Math.PI * 2);
             ctx.fillStyle = p.type === 'cp' ? '#f1c40f' : '#fff';
             ctx.fill();
             ctx.strokeStyle = '#000';
@@ -43,10 +104,11 @@ export function initTacticalBoard(canvas, draggablesContainer, boardWrapper) {
         });
     }
 
-    // Canvas Events
-    canvas.addEventListener('mousedown', (e) => {
-        const x = e.offsetX, y = e.offsetY;
-        
+    // ── Pointer down (mouse + touch) ─────────────────────────────────────
+    function onPointerDown(e) {
+        if (e.type === 'touchstart') e.preventDefault();
+        const { x, y } = getEventPos(e, canvas);
+
         selectedHandle = getHandleAt(x, y);
         if (selectedHandle) {
             isDrawing = true;
@@ -79,10 +141,12 @@ export function initTacticalBoard(canvas, draggablesContainer, boardWrapper) {
             selectedObject = null;
             renderTacticalCanvas();
         }
-    });
+    }
 
-    canvas.addEventListener('mousemove', (e) => {
-        const x = e.offsetX, y = e.offsetY;
+    function onPointerMove(e) {
+        if (e.type === 'touchmove') e.preventDefault();
+        const { x, y } = getEventPos(e, canvas);
+
         if (!isDrawing) {
             if (getHandleAt(x, y)) canvas.style.cursor = 'pointer';
             else if (getObjectAt(x, y)) canvas.style.cursor = 'grab';
@@ -101,16 +165,16 @@ export function initTacticalBoard(canvas, draggablesContainer, boardWrapper) {
         }
 
         if (selectedObject && dragStartX !== undefined) {
-             const dx = x - dragStartX;
-             const dy = y - dragStartY;
-             selectedObject.x1 += dx; selectedObject.y1 += dy;
-             selectedObject.x2 += dx; selectedObject.y2 += dy;
-             if (selectedObject.cpx !== undefined) {
-                 selectedObject.cpx += dx; selectedObject.cpy += dy;
-             }
-             dragStartX = x; dragStartY = y;
-             renderTacticalCanvas();
-             return;
+            const dx = x - dragStartX;
+            const dy = y - dragStartY;
+            selectedObject.x1 += dx; selectedObject.y1 += dy;
+            selectedObject.x2 += dx; selectedObject.y2 += dy;
+            if (selectedObject.cpx !== undefined) {
+                selectedObject.cpx += dx; selectedObject.cpy += dy;
+            }
+            dragStartX = x; dragStartY = y;
+            renderTacticalCanvas();
+            return;
         }
 
         if (drawType === 'select') return;
@@ -125,12 +189,12 @@ export function initTacticalBoard(canvas, draggablesContainer, boardWrapper) {
             const midY = (startY + snap.y) / 2;
             drawBasketballLine(ctx, { type: drawType, x1: startX, y1: startY, x2: snap.x, y2: snap.y, cpx: midX, cpy: midY });
         }
-    });
+    }
 
-    canvas.addEventListener('mouseup', (e) => {
+    function onPointerUp(e) {
         if (!isDrawing) return;
         isDrawing = false;
-        const x = e.offsetX, y = e.offsetY;
+        const { x, y } = getEventPos(e, canvas);
 
         if (selectedHandle || (selectedObject && dragStartX !== undefined)) {
             selectedHandle = null;
@@ -154,22 +218,32 @@ export function initTacticalBoard(canvas, draggablesContainer, boardWrapper) {
                 x1: startX, y1: startY,
                 x2: endX, y2: endY
             };
-            
+
             if (['run', 'pass', 'dribble', 'screen', 'highlight', 'handoff', 'shot'].includes(drawType)) {
                 newObj.cpx = (startX + endX) / 2;
                 newObj.cpy = (startY + endY) / 2;
             }
-            
+
             tacticalDrawings.push(newObj);
-            selectedObject = newObj; 
+            selectedObject = newObj;
         }
         renderTacticalCanvas();
-    });
+    }
+
+    // Canvas event listeners (mouse + touch)
+    canvas.addEventListener('mousedown', onPointerDown);
+    canvas.addEventListener('mousemove', onPointerMove);
+    canvas.addEventListener('mouseup', onPointerUp);
+
+    canvas.addEventListener('touchstart', onPointerDown, { passive: false });
+    canvas.addEventListener('touchmove', onPointerMove, { passive: false });
+    canvas.addEventListener('touchend', onPointerUp, { passive: false });
 
     canvas.addEventListener('contextmenu', (e) => {
         if (drawType === 'select') {
             e.preventDefault();
-            const obj = getObjectAt(e.offsetX, e.offsetY);
+            const { x, y } = getEventPos(e, canvas);
+            const obj = getObjectAt(x, y);
             if (obj) {
                 tacticalDrawings = tacticalDrawings.filter(o => o !== obj);
                 renderTacticalCanvas();
@@ -178,66 +252,78 @@ export function initTacticalBoard(canvas, draggablesContainer, boardWrapper) {
         }
     });
 
-    // Piece Interaction Logic
+    // ── Piece (oyuncu) sürükleme – mouse & touch ─────────────────────────
     let activePiece = null;
     let isRotating = false;
     let startPieceAngle = 0;
     let startPieceRotation = 0;
 
-    const handlePieceMouseDown = (e) => {
+    function handlePieceStart(e) {
         const piece = e.target.closest('.draggable-piece');
         if (!piece) return;
+        if (e.type === 'touchstart') e.preventDefault();
 
         activePiece = piece;
         const id = piece.dataset.id;
         const pieceData = tacticalDrawings.find(d => d.id === id);
+        if (!pieceData) return;
 
         if (e.target.classList.contains('rotate-handle')) {
             isRotating = true;
             const rect = piece.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
-            startPieceAngle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            startPieceAngle = Math.atan2(clientY - centerY, clientX - centerX);
             startPieceRotation = pieceData.rotation || 0;
         } else {
             piece.style.cursor = 'grabbing';
-            const rect = boardWrapper.getBoundingClientRect();
-            dragStartX = e.clientX - rect.left - pieceData.x;
-            dragStartY = e.clientY - rect.top - pieceData.y;
+            const pos = getPieceEventPos(e, boardWrapper);
+            dragStartX = pos.x - pieceData.x;
+            dragStartY = pos.y - pieceData.y;
         }
 
-        const onMouseMove = (moveEvent) => {
+        const onMove = (moveEvent) => {
             if (!activePiece) return;
+            if (moveEvent.type === 'touchmove') moveEvent.preventDefault();
             const data = tacticalDrawings.find(d => d.id === activePiece.dataset.id);
+            if (!data) return;
 
             if (isRotating) {
                 const rect = activePiece.getBoundingClientRect();
                 const centerX = rect.left + rect.width / 2;
                 const centerY = rect.top + rect.height / 2;
-                const currentAngle = Math.atan2(moveEvent.clientY - centerY, moveEvent.clientX - centerX);
-                const rotation = startPieceRotation + (currentAngle - startPieceAngle) * (180 / Math.PI);
-                data.rotation = rotation;
+                const cx = moveEvent.touches ? moveEvent.touches[0].clientX : moveEvent.clientX;
+                const cy = moveEvent.touches ? moveEvent.touches[0].clientY : moveEvent.clientY;
+                const currentAngle = Math.atan2(cy - centerY, cx - centerX);
+                data.rotation = startPieceRotation + (currentAngle - startPieceAngle) * (180 / Math.PI);
             } else {
-                const rect = boardWrapper.getBoundingClientRect();
-                data.x = moveEvent.clientX - rect.left - dragStartX;
-                data.y = moveEvent.clientY - rect.top - dragStartY;
+                const pos = getPieceEventPos(moveEvent, boardWrapper);
+                data.x = pos.x - dragStartX;
+                data.y = pos.y - dragStartY;
             }
             updatePiecePosition(activePiece, data);
         };
 
-        const onMouseUp = () => {
+        const onEnd = () => {
             if (activePiece) activePiece.style.cursor = 'grab';
             activePiece = null;
             isRotating = false;
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onEnd);
+            document.removeEventListener('touchmove', onMove);
+            document.removeEventListener('touchend', onEnd);
         };
 
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mouseup', onMouseUp);
-    };
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onEnd);
+        document.addEventListener('touchmove', onMove, { passive: false });
+        document.addEventListener('touchend', onEnd);
+    }
 
-    draggablesContainer.addEventListener('mousedown', handlePieceMouseDown);
+    draggablesContainer.addEventListener('mousedown', handlePieceStart);
+    draggablesContainer.addEventListener('touchstart', handlePieceStart, { passive: false });
 
     const updatePiecePosition = (el, data) => {
         el.style.left = `${data.x}px`;
@@ -245,8 +331,12 @@ export function initTacticalBoard(canvas, draggablesContainer, boardWrapper) {
         el.style.transform = `rotate(${data.rotation || 0}deg)`;
     };
 
-    const addPiece = (text, type, x = 100, y = 100) => {
-        const id = 'piece_' + Date.now();
+    const addPiece = (text, type, x, y) => {
+        // Varsayılan konumu canvas'ın orta üst bölgesine ver
+        if (x === undefined) x = canvas.width * 0.45;
+        if (y === undefined) y = canvas.height * 0.65;
+
+        const id = 'piece_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
         const drawing = { id, type: 'piece', pieceType: type, text, x, y, rotation: 0 };
         tacticalDrawings.push(drawing);
 
@@ -256,7 +346,7 @@ export function initTacticalBoard(canvas, draggablesContainer, boardWrapper) {
         el.innerText = text;
         el.style.left = `${x}px`;
         el.style.top = `${y}px`;
-        
+
         const handle = document.createElement('div');
         handle.className = 'rotate-handle';
         el.appendChild(handle);
@@ -276,20 +366,117 @@ export function initTacticalBoard(canvas, draggablesContainer, boardWrapper) {
         draggablesContainer.innerHTML = '';
         tacticalDrawings = [];
         const w = canvas.width, h = canvas.height;
-        
+
         if (name === '5out') {
             addPiece('1', 'offense', w * 0.45, h * 0.75);
             addPiece('2', 'offense', w * 0.20, h * 0.60);
             addPiece('3', 'offense', w * 0.70, h * 0.60);
             addPiece('4', 'offense', w * 0.15, h * 0.35);
             addPiece('5', 'offense', w * 0.75, h * 0.35);
+        } else if (name === '4out1in') {
+            addPiece('1', 'offense', w * 0.45, h * 0.78);
+            addPiece('2', 'offense', w * 0.18, h * 0.60);
+            addPiece('3', 'offense', w * 0.72, h * 0.60);
+            addPiece('4', 'offense', w * 0.20, h * 0.30);
+            addPiece('5', 'offense', w * 0.45, h * 0.45);
+        } else if (name === '3out2in') {
+            addPiece('1', 'offense', w * 0.45, h * 0.80);
+            addPiece('2', 'offense', w * 0.18, h * 0.60);
+            addPiece('3', 'offense', w * 0.72, h * 0.60);
+            addPiece('4', 'offense', w * 0.30, h * 0.40);
+            addPiece('5', 'offense', w * 0.60, h * 0.40);
+        } else if (name === 'horn') {
+            addPiece('1', 'offense', w * 0.45, h * 0.82);
+            addPiece('2', 'offense', w * 0.18, h * 0.65);
+            addPiece('3', 'offense', w * 0.72, h * 0.65);
+            addPiece('4', 'offense', w * 0.30, h * 0.48);
+            addPiece('5', 'offense', w * 0.60, h * 0.48);
+        } else if (name === 'box') {
+            addPiece('1', 'offense', w * 0.45, h * 0.82);
+            addPiece('2', 'offense', w * 0.18, h * 0.55);
+            addPiece('3', 'offense', w * 0.72, h * 0.55);
+            addPiece('4', 'offense', w * 0.18, h * 0.30);
+            addPiece('5', 'offense', w * 0.72, h * 0.30);
+        } else if (name === 'high14') {
+            addPiece('1', 'offense', w * 0.45, h * 0.82);
+            addPiece('2', 'offense', w * 0.15, h * 0.65);
+            addPiece('3', 'offense', w * 0.75, h * 0.65);
+            addPiece('4', 'offense', w * 0.30, h * 0.48);
+            addPiece('5', 'offense', w * 0.60, h * 0.48);
+        } else if (name === 'stack') {
+            addPiece('1', 'offense', w * 0.45, h * 0.82);
+            addPiece('2', 'offense', w * 0.18, h * 0.55);
+            addPiece('3', 'offense', w * 0.18, h * 0.40);
+            addPiece('4', 'offense', w * 0.72, h * 0.55);
+            addPiece('5', 'offense', w * 0.72, h * 0.40);
+        } else if (name === 'flex') {
+            addPiece('1', 'offense', w * 0.45, h * 0.80);
+            addPiece('2', 'offense', w * 0.72, h * 0.60);
+            addPiece('3', 'offense', w * 0.18, h * 0.45);
+            addPiece('4', 'offense', w * 0.60, h * 0.32);
+            addPiece('5', 'offense', w * 0.45, h * 0.48);
+        } else if (name === 'triangle') {
+            addPiece('1', 'offense', w * 0.45, h * 0.80);
+            addPiece('2', 'offense', w * 0.72, h * 0.55);
+            addPiece('3', 'offense', w * 0.72, h * 0.30);
+            addPiece('4', 'offense', w * 0.45, h * 0.42);
+            addPiece('5', 'offense', w * 0.18, h * 0.55);
+        } else if (name === 'princeton') {
+            addPiece('1', 'offense', w * 0.45, h * 0.80);
+            addPiece('2', 'offense', w * 0.20, h * 0.60);
+            addPiece('3', 'offense', w * 0.70, h * 0.60);
+            addPiece('4', 'offense', w * 0.45, h * 0.42);
+            addPiece('5', 'offense', w * 0.45, h * 0.25);
         } else if (name === 'zone23') {
             addPiece('X1', 'defense', w * 0.35, h * 0.60);
             addPiece('X2', 'defense', w * 0.55, h * 0.60);
             addPiece('X3', 'defense', w * 0.20, h * 0.35);
             addPiece('X4', 'defense', w * 0.45, h * 0.30);
             addPiece('X5', 'defense', w * 0.70, h * 0.35);
+        } else if (name === 'zone32') {
+            addPiece('X1', 'defense', w * 0.25, h * 0.65);
+            addPiece('X2', 'defense', w * 0.45, h * 0.65);
+            addPiece('X3', 'defense', w * 0.65, h * 0.65);
+            addPiece('X4', 'defense', w * 0.30, h * 0.38);
+            addPiece('X5', 'defense', w * 0.60, h * 0.38);
+        } else if (name === 'zone131') {
+            addPiece('X1', 'defense', w * 0.45, h * 0.70);
+            addPiece('X2', 'defense', w * 0.20, h * 0.48);
+            addPiece('X3', 'defense', w * 0.45, h * 0.48);
+            addPiece('X4', 'defense', w * 0.70, h * 0.48);
+            addPiece('X5', 'defense', w * 0.45, h * 0.25);
+        } else if (name === 'zone22_1') {
+            addPiece('X1', 'defense', w * 0.30, h * 0.72);
+            addPiece('X2', 'defense', w * 0.60, h * 0.72);
+            addPiece('X3', 'defense', w * 0.30, h * 0.48);
+            addPiece('X4', 'defense', w * 0.60, h * 0.48);
+            addPiece('X5', 'defense', w * 0.45, h * 0.28);
+        } else if (name === 'manToMan') {
+            addPiece('X1', 'defense', w * 0.45, h * 0.70);
+            addPiece('X2', 'defense', w * 0.20, h * 0.58);
+            addPiece('X3', 'defense', w * 0.70, h * 0.58);
+            addPiece('X4', 'defense', w * 0.20, h * 0.35);
+            addPiece('X5', 'defense', w * 0.70, h * 0.35);
+        } else if (name === 'matchup') {
+            addPiece('X1', 'defense', w * 0.45, h * 0.68);
+            addPiece('X2', 'defense', w * 0.25, h * 0.55);
+            addPiece('X3', 'defense', w * 0.65, h * 0.55);
+            addPiece('X4', 'defense', w * 0.25, h * 0.35);
+            addPiece('X5', 'defense', w * 0.65, h * 0.35);
+        } else if (name === 'boxAndOne') {
+            addPiece('X1', 'defense', w * 0.45, h * 0.70);
+            addPiece('X2', 'defense', w * 0.20, h * 0.55);
+            addPiece('X3', 'defense', w * 0.70, h * 0.55);
+            addPiece('X4', 'defense', w * 0.20, h * 0.32);
+            addPiece('X5', 'defense', w * 0.70, h * 0.32);
+        } else if (name === 'diamondPress') {
+            addPiece('X1', 'defense', w * 0.45, h * 0.88);
+            addPiece('X2', 'defense', w * 0.20, h * 0.72);
+            addPiece('X3', 'defense', w * 0.70, h * 0.72);
+            addPiece('X4', 'defense', w * 0.45, h * 0.55);
+            addPiece('X5', 'defense', w * 0.45, h * 0.35);
         }
+
         renderTacticalCanvas();
     };
 
@@ -307,7 +494,8 @@ export function initTacticalBoard(canvas, draggablesContainer, boardWrapper) {
         addPiece,
         clearBoard,
         applyFormation,
-        render: renderTacticalCanvas
+        render: renderTacticalCanvas,
+        resize: resizeCanvas
     };
 }
 
@@ -328,9 +516,10 @@ function getPointOnBezier(t, p1, cp, p2) {
 function getHandleAt(x, y) {
     if (!selectedObject) return null;
     const obj = selectedObject;
-    if (Math.hypot(obj.x1 - x, obj.y1 - y) < 10) return { obj, type: 'p1' };
-    if (Math.hypot(obj.x2 - x, obj.y2 - y) < 10) return { obj, type: 'p2' };
-    if (obj.cpx !== undefined && Math.hypot(obj.cpx - x, obj.cpy - y) < 10) return { obj, type: 'cp' };
+    const HIT = 18; // dokunmatik için büyütülmüş hit area
+    if (Math.hypot(obj.x1 - x, obj.y1 - y) < HIT) return { obj, type: 'p1' };
+    if (Math.hypot(obj.x2 - x, obj.y2 - y) < HIT) return { obj, type: 'p2' };
+    if (obj.cpx !== undefined && Math.hypot(obj.cpx - x, obj.cpy - y) < HIT) return { obj, type: 'cp' };
     return null;
 }
 
@@ -349,11 +538,11 @@ function getObjectAt(x, y) {
         } else if (obj.cpx !== undefined) {
             for (let t = 0; t <= 1; t += 0.1) {
                 const p = getPointOnBezier(t, { x: obj.x1, y: obj.y1 }, { x: obj.cpx, y: obj.cpy }, { x: obj.x2, y: obj.y2 });
-                if (Math.hypot(p.x - x, p.y - y) < 15) return obj;
+                if (Math.hypot(p.x - x, p.y - y) < 18) return obj;
             }
         } else {
             const dist = distToSegment(x, y, obj.x1, obj.y1, obj.x2, obj.y2);
-            if (dist < 12) return obj;
+            if (dist < 18) return obj;
         }
     }
     return null;
@@ -385,10 +574,10 @@ function drawBasketballLine(ctx, obj, isSelected = false) {
     const { x1, y1, x2, y2, cpx, cpy, type } = obj;
     if (type === 'piece') return;
     const dist = Math.hypot(x2 - x1, y2 - y1);
-    
+
     ctx.save();
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    
+
     if (isSelected) {
         ctx.shadowBlur = 10; ctx.shadowColor = 'rgba(255, 107, 0, 0.8)';
     }
@@ -396,15 +585,15 @@ function drawBasketballLine(ctx, obj, isSelected = false) {
     const hasCP = cpx !== undefined;
 
     if (type === 'pass') {
-        ctx.setLineDash([10, 6]); 
+        ctx.setLineDash([10, 6]);
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 2.5;
-        ctx.beginPath(); 
+        ctx.beginPath();
         ctx.moveTo(x1, y1);
         if (hasCP) ctx.quadraticCurveTo(cpx, cpy, x2, y2);
         else ctx.lineTo(x2, y2);
         ctx.stroke();
-        ctx.setLineDash([]); 
+        ctx.setLineDash([]);
         const arrowAngle = hasCP ? Math.atan2(y2 - cpy, x2 - cpx) : Math.atan2(y2 - y1, x2 - x1);
         drawArrow(ctx, x2, y2, arrowAngle);
     } else if (type === 'dribble') {
@@ -416,7 +605,7 @@ function drawBasketballLine(ctx, obj, isSelected = false) {
             let p;
             if (hasCP) p = getPointOnBezier(t, { x: x1, y: y1 }, { x: cpx, y: cpy }, { x: x2, y: y2 });
             else p = { x: x1 + (x2 - x1) * t, y: y1 + (y2 - y1) * t };
-            
+
             const nextT = (i + 1) / steps;
             let nextP;
             if (hasCP) nextP = getPointOnBezier(nextT, { x: x1, y: y1 }, { x: cpx, y: cpy }, { x: x2, y: y2 });
@@ -428,7 +617,7 @@ function drawBasketballLine(ctx, obj, isSelected = false) {
             const wy = p.y + waveOffset * Math.sin(segmentAngle + Math.PI / 2);
             if (i === 0) ctx.moveTo(wx, wy); else ctx.lineTo(wx, wy);
         }
-        ctx.stroke(); 
+        ctx.stroke();
         const arrowAngle = hasCP ? Math.atan2(y2 - cpy, x2 - cpx) : Math.atan2(y2 - y1, x2 - x1);
         drawArrow(ctx, x2, y2, arrowAngle);
     } else if (type === 'screen') {
