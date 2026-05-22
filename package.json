@@ -1,0 +1,78 @@
+{
+  "name": "clutch-app",
+  "version": "1.0.0",
+  "description": "ClutchApp - Basketbol Antrenörleri İçin Profesyonel Dijital Ajanda",
+  "main": "main.js",
+  "author": "ClutchApp",
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win --x64",
+    "dist:mac": "electron-builder --mac",
+    "dist:all": "electron-builder --win --mac"
+  },
+  "build": {
+    "appId": "com.clutchapp.elite",
+    "productName": "ClutchApp",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "index.html",
+      "logo.png",
+      "favicon.svg",
+      "icons.svg",
+      "ball-e.jpg",
+      "bg-login.jpg",
+      "assets/**/*",
+      "videos/**/*"
+    ],
+    "forceCodeSigning": false,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "logo.png",
+      "signAndEditExecutable": false,
+      "sign": null
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "installerSidebar": null,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "ClutchApp"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "icon": "logo.png",
+      "category": "public.app-category.sports"
+    },
+    "dmg": {
+      "title": "ClutchApp Kurulum",
+      "contents": [
+        { "x": 130, "y": 220 },
+        { "x": 410, "y": 220, "type": "link", "path": "/Applications" }
+      ]
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^35.0.0",
+    "electron-builder": "^26.0.0"
+  }
+}
