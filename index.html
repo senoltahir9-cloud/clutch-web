@@ -4,8 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Clutch App">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0f0f13">
+    <meta name="description" content="Clutch - Basketbol Antrenör Yönetim Sistemi. Taktik tahtası, playbook, oyuncu takibi ve maç istatistikleri.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
     <title>Dijital Ajanda CLUTCH</title>
     <script type="module" src="/src/main.js"></script>
@@ -6748,6 +6756,31 @@ Lütfen bana spesifik bir soru sor! 🤖`;
             </div>
         </div>
     </div>
+
+    <!-- === MOBİL BOTTOM NAVIGATION === -->
+    <nav id="bottomNav" class="bottom-nav" style="display:none;">
+        <div class="bottom-nav-item active" data-tab="dashboard" onclick="window.switchTab('dashboard', document.querySelector('[onclick*=\'dashboard\']'))">
+            <span class="bottom-nav-icon">📊</span>
+            <span class="bottom-nav-label">Ana Sayfa</span>
+        </div>
+        <div class="bottom-nav-item" data-tab="tacticalpad" onclick="window.switchTab('tacticalpad', document.querySelector('[onclick*=\'tacticalpad\']'))">
+            <span class="bottom-nav-icon">📋</span>
+            <span class="bottom-nav-label">Taktik</span>
+        </div>
+        <div class="bottom-nav-item" data-tab="matches" onclick="window.switchTab('matches', document.querySelector('[onclick*=\'matches\']'))">
+            <span class="bottom-nav-icon">🏆</span>
+            <span class="bottom-nav-label">Maçlar</span>
+        </div>
+        <div class="bottom-nav-item" data-tab="calendar" onclick="window.switchTab('calendar', document.querySelector('[onclick*=\'calendar\']'))">
+            <span class="bottom-nav-icon">📅</span>
+            <span class="bottom-nav-label">Takvim</span>
+        </div>
+        <div class="bottom-nav-item" data-tab="__menu" onclick="toggleMobileMenu()">
+            <span class="bottom-nav-icon">☰</span>
+            <span class="bottom-nav-label">Menü</span>
+        </div>
+    </nav>
+
 </body>
 
 </html>

@@ -3,7 +3,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   base: '/clutch-web/',
   server: {
-    host: true,   // Ağdaki tüm cihazlardan erişime aç (iPad, telefon vs.)
+    host: true,
     port: 5173
   },
   build: {
@@ -12,9 +12,9 @@ export default defineConfig({
     target: 'es2015',
     rollupOptions: {
       output: {
-        format: 'iife',
+        format: 'es',
         entryFileNames: 'assets/[name].js',
-        chunkFileNames: 'assets/[name].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name].[ext]'
       }
     }
