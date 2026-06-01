@@ -7,7 +7,9 @@
   "scripts": {
     "start": "electron .",
     "dist:win": "electron-builder --win --x64",
-    "dist:mac": "electron-builder --mac",
+    "dist:mac": "electron-builder --mac dmg --x64 --arm64",
+    "dist:mac:x64": "electron-builder --mac dmg --x64",
+    "dist:mac:arm64": "electron-builder --mac dmg --arm64",
     "dist:all": "electron-builder --win --mac"
   },
   "build": {
@@ -23,7 +25,9 @@
       "favicon.svg",
       "icons.svg",
       "ball-e.jpg",
+      "basketball-hero.png",
       "bg-login.jpg",
+      "knowledge/**/*",
       "assets/**/*",
       "videos/**/*"
     ],
@@ -40,8 +44,7 @@
         }
       ],
       "icon": "logo.png",
-      "signAndEditExecutable": false,
-      "sign": null
+      "signAndEditExecutable": false
     },
     "nsis": {
       "oneClick": true,
