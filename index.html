@@ -3531,6 +3531,9 @@
                 let proPlaybackRenderFrame = null;
                 let proTimelineHoldTime = null;
                 let proTimelineHoldUntil = 0;
+                let proTimelineRulerSignature = '';
+                const proPlayheadCache = {};
+                const proImageDataCanvasCache = new WeakMap();
 
                 function getClipStart() {
                     return Math.max(0, proMainVideoClip ? Number(proMainVideoClip.start) || 0 : 0);
@@ -3700,11 +3703,19 @@
 
                 function putImageDataScaled(ctx, imageData, x, y, w, h) {
                     if (!imageData) return;
-                    const temp = document.createElement('canvas');
-                    temp.width = imageData.width;
-                    temp.height = imageData.height;
-                    temp.getContext('2d').putImageData(imageData, 0, 0);
-                    ctx.drawImage(temp, x, y, w, h);
+                    ctx.drawImage(getCachedImageDataCanvas(imageData), x, y, w, h);
+                }
+
+                function getCachedImageDataCanvas(imageData) {
+                    let cached = proImageDataCanvasCache.get(imageData);
+                    if (!cached) {
+                        cached = document.createElement('canvas');
+                        cached.width = imageData.width;
+                        cached.height = imageData.height;
+                        cached.getContext('2d').putImageData(imageData, 0, 0);
+                        proImageDataCanvasCache.set(imageData, cached);
+                    }
+                    return cached;
                 }
 
                 function getAreaPoints(x1, y1, x2, y2, mode = proAreaMode) {
@@ -3875,10 +3886,7 @@
 
                 function drawImageDataScaled(targetCtx, imageData, targetW, targetH, offsetX = 0, offsetY = 0) {
                     if (!imageData) return;
-                    const tempC = document.createElement('canvas');
-                    tempC.width = imageData.width;
-                    tempC.height = imageData.height;
-                    tempC.getContext('2d').putImageData(imageData, 0, 0);
+                    const tempC = getCachedImageDataCanvas(imageData);
                     const scaleX = targetW / imageData.width;
                     const scaleY = targetH / imageData.height;
                     targetCtx.drawImage(tempC, offsetX * scaleX, offsetY * scaleY, targetW, targetH);
@@ -4039,10 +4047,7 @@
                             const sourceH = seg.sourceHeight || seg.imageData.height || targetH;
                             const sx = targetW / sourceW;
                             const sy = targetH / sourceH;
-                            const tempC = document.createElement('canvas');
-                            tempC.width = seg.imageData.width;
-                            tempC.height = seg.imageData.height;
-                            tempC.getContext('2d').putImageData(seg.imageData, 0, 0);
+                            const tempC = getCachedImageDataCanvas(seg.imageData);
                             const scale = Number(seg.scale) || 1;
                             const drawW = targetW * scale;
                             const drawH = targetH * scale;
@@ -4454,14 +4459,17 @@
                     if (totalEl) totalEl.innerText = formatTime(virtualDuration);
                     if (durationEl) durationEl.innerText = formatTime(virtualDuration);
                     renderTimelineRuler(virtualDuration);
-                    updatePlayhead();
+                    updatePlayhead(pct);
                 }
 
                 function renderTimelineRuler(virtualDuration) {
                     const bar = document.getElementById('proTimelineBar');
                     if (!bar || !virtualDuration) return;
-                    bar.querySelectorAll('.timeline-ruler-tick').forEach(el => el.remove());
                     const step = virtualDuration > 60 ? 10 : virtualDuration > 25 ? 5 : 3;
+                    const signature = `${virtualDuration.toFixed(2)}:${step}`;
+                    if (proTimelineRulerSignature === signature && bar.querySelector('.timeline-ruler-tick')) return;
+                    proTimelineRulerSignature = signature;
+                    bar.querySelectorAll('.timeline-ruler-tick').forEach(el => el.remove());
                     for (let t = 0; t <= virtualDuration + 0.001; t += step) {
                         const tick = document.createElement('div');
                         tick.className = 'timeline-ruler-tick';
@@ -5137,7 +5145,7 @@
                         drawProSegment(proCtx, seg, proCanvas.width, proCanvas.height, selectedProSegment && selectedProSegment.id === seg.id, progress);
                     });
 
-                    if (needsNextFrame) {
+                    if (needsNextFrame && (!proVideo || proVideo.paused) && !activePlaybackFreeze) {
                         if (proAnnotationAnimFrame) cancelAnimationFrame(proAnnotationAnimFrame);
                         proAnnotationAnimFrame = requestAnimationFrame(renderAnnotationsOnVideo);
                     }
@@ -5335,19 +5343,21 @@
                     updatePlayhead();
                 }
 
-                function updatePlayhead() {
+                function updatePlayhead(pctOverride = null) {
                     if (!proVideo || !proVideo.duration) return;
-                    const pct = (getCurrentTimelineTime() / (getVirtualDuration() || proVideo.duration) * 100);
+                    const pct = pctOverride !== null ? pctOverride : (getCurrentTimelineTime() / (getVirtualDuration() || proVideo.duration) * 100);
                     ['track-main-video', 'track-drawings', 'track-freeze', 'track-markers'].forEach(trackId => {
                         const track = document.getElementById(trackId);
                         if (!track) return;
-                        let ph = track.querySelector('.track-playhead');
+                        let ph = proPlayheadCache[trackId];
+                        if (!ph || !ph.isConnected || ph.parentElement !== track) ph = track.querySelector('.track-playhead');
                         if (!ph) {
                             ph = document.createElement('div');
                             ph.className = 'track-playhead';
                             ph.style.cssText = `position:absolute;top:0;bottom:0;width:2px;background:#ff4757;pointer-events:none;z-index:30;box-shadow:0 0 8px rgba(255,71,87,0.75);`;
                         track.appendChild(ph);
                         }
+                        proPlayheadCache[trackId] = ph;
                         ph.style.left = pct + '%';
                     });
                 }
