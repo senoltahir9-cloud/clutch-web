@@ -3534,6 +3534,10 @@
                 let proTimelineRulerSignature = '';
                 const proPlayheadCache = {};
                 const proImageDataCanvasCache = new WeakMap();
+                let proLastAnnotationSignature = '';
+                let proLastPlaybackRenderAt = 0;
+                const PRO_PLAYBACK_RENDER_INTERVAL_MS = 33;
+                const proTimelineUiCache = { pct: null, time: '', duration: '' };
 
                 function getClipStart() {
                     return Math.max(0, proMainVideoClip ? Number(proMainVideoClip.start) || 0 : 0);
@@ -4384,7 +4388,34 @@
                 }
 
                 function clearProCanvas() {
+                    proLastAnnotationSignature = '';
                     if (proCtx && proCanvas) proCtx.clearRect(0, 0, proCanvas.width, proCanvas.height);
+                }
+
+                function invalidateProAnnotationRender() {
+                    proLastAnnotationSignature = '';
+                }
+
+                function getSegmentRenderSignature(seg, progress = 1) {
+                    if (!seg) return '';
+                    const m = seg.meta || {};
+                    const parts = [
+                        seg.id,
+                        seg.freezeId || '',
+                        seg.startTime,
+                        seg.endTime,
+                        seg.offsetX || 0,
+                        seg.offsetY || 0,
+                        seg.scale || 1,
+                        selectedProSegment && selectedProSegment.id === seg.id ? 'sel' : '',
+                        progress < 1 ? progress.toFixed(2) : 'done'
+                    ];
+                    if (seg.meta) {
+                        parts.push(m.tool || '', m.x1 || 0, m.y1 || 0, m.x2 || 0, m.y2 || 0, m.radius || 0, m.thickness || 0, m.color || '', m.areaMode || '');
+                    } else {
+                        parts.push(seg.imageData ? `${seg.imageData.width}x${seg.imageData.height}` : '');
+                    }
+                    return parts.join('|');
                 }
 
                 function clearAllVideoAnnotations() {
@@ -4452,12 +4483,23 @@
                     const proTime = document.getElementById('proTime');
                     const totalEl = document.getElementById('proTotalTime');
                     const durationEl = document.getElementById('proDuration');
-                    if (fill) fill.style.width = pct + '%';
-                    if (head) head.style.left = pct + '%';
-                    if (timeDisp) timeDisp.innerText = formatTime(currentTimelineTime);
-                    if (proTime) proTime.innerText = formatTime(currentTimelineTime);
-                    if (totalEl) totalEl.innerText = formatTime(virtualDuration);
-                    if (durationEl) durationEl.innerText = formatTime(virtualDuration);
+                    if (proTimelineUiCache.pct === null || Math.abs(proTimelineUiCache.pct - pct) > 0.03) {
+                        proTimelineUiCache.pct = pct;
+                        if (fill) fill.style.width = pct + '%';
+                        if (head) head.style.left = pct + '%';
+                    }
+                    const timeText = formatTime(currentTimelineTime);
+                    const durationText = formatTime(virtualDuration);
+                    if (proTimelineUiCache.time !== timeText) {
+                        proTimelineUiCache.time = timeText;
+                        if (timeDisp) timeDisp.innerText = timeText;
+                        if (proTime) proTime.innerText = timeText;
+                    }
+                    if (proTimelineUiCache.duration !== durationText) {
+                        proTimelineUiCache.duration = durationText;
+                        if (totalEl) totalEl.innerText = durationText;
+                        if (durationEl) durationEl.innerText = durationText;
+                    }
                     renderTimelineRuler(virtualDuration);
                     updatePlayhead(pct);
                 }
@@ -4569,11 +4611,14 @@
 
                 function startProPlaybackRenderLoop() {
                     if (!proVideo || proPlaybackRenderFrame) return;
-                    const tick = () => {
+                    const tick = (ts) => {
                         proPlaybackRenderFrame = null;
                         if (!proVideo || proVideo.paused || proVideo.ended) return;
-                        renderAnnotationsOnVideo();
-                        updateTimelineUi();
+                        if (!proLastPlaybackRenderAt || ts - proLastPlaybackRenderAt >= PRO_PLAYBACK_RENDER_INTERVAL_MS) {
+                            proLastPlaybackRenderAt = ts;
+                            renderAnnotationsOnVideo();
+                            updateTimelineUi();
+                        }
                         proPlaybackRenderFrame = requestAnimationFrame(tick);
                     };
                     proPlaybackRenderFrame = requestAnimationFrame(tick);
@@ -4582,6 +4627,7 @@
                 function stopProPlaybackRenderLoop() {
                     if (proPlaybackRenderFrame) cancelAnimationFrame(proPlaybackRenderFrame);
                     proPlaybackRenderFrame = null;
+                    proLastPlaybackRenderAt = 0;
                 }
 
                 function stopProAnnotationAnimation() {
@@ -5130,6 +5176,20 @@
                         return true;
                     });
 
+                    const drawable = active.map(seg => {
+                        const progress = getSegmentRevealProgress(seg, now);
+                        if (progress < 1) needsNextFrame = true;
+                        return { seg, progress };
+                    });
+                    const signature = [
+                        proCanvas.width,
+                        proCanvas.height,
+                        freezeContext ? String(freezeContext.id) : '',
+                        drawable.map(item => getSegmentRenderSignature(item.seg, item.progress)).join('~')
+                    ].join('::');
+                    if (signature === proLastAnnotationSignature && !needsNextFrame) return;
+                    proLastAnnotationSignature = signature;
+
                     proCtx.clearRect(0, 0, proCanvas.width, proCanvas.height);
 
                     if (freezeContext && freezeContext.imageData) {
@@ -5139,9 +5199,7 @@
                         proCtx.restore();
                     }
 
-                    active.forEach(seg => {
-                        const progress = getSegmentRevealProgress(seg, now);
-                        if (progress < 1) needsNextFrame = true;
+                    drawable.forEach(({ seg, progress }) => {
                         drawProSegment(proCtx, seg, proCanvas.width, proCanvas.height, selectedProSegment && selectedProSegment.id === seg.id, progress);
                     });
 
@@ -6021,9 +6079,10 @@
                 }
 
                 async function canvasToVp8Frame(canvas, quality = 0.82) {
-                    const opaqueCanvas = document.createElement('canvas');
-                    opaqueCanvas.width = canvas.width;
-                    opaqueCanvas.height = canvas.height;
+                    const opaqueCanvas = canvas._opaqueExportCanvas || document.createElement('canvas');
+                    if (!canvas._opaqueExportCanvas) canvas._opaqueExportCanvas = opaqueCanvas;
+                    if (opaqueCanvas.width !== canvas.width) opaqueCanvas.width = canvas.width;
+                    if (opaqueCanvas.height !== canvas.height) opaqueCanvas.height = canvas.height;
                     const opaqueCtx = opaqueCanvas.getContext('2d', { alpha: false });
                     opaqueCtx.fillStyle = '#000';
                     opaqueCtx.fillRect(0, 0, opaqueCanvas.width, opaqueCanvas.height);
@@ -6287,6 +6346,18 @@
                     return { width: settings.width || PRO_VIDEO_EXPORT.width, height: settings.height || PRO_VIDEO_EXPORT.height };
                 }
 
+                function getVideoAnalysisComplexity() {
+                    const effectWeight = proDrawingSegments.reduce((sum, seg) => {
+                        const tool = seg.meta && seg.meta.tool;
+                        return sum + (['spotlight', 'tubeSpotlight', 'glow', 'zoomLens', 'blur', 'dimArea', 'routeSimulator'].includes(tool) ? 2 : 1);
+                    }, 0);
+                    return effectWeight + (proFreezes.length * 3);
+                }
+
+                function shouldUseStableExport(settings) {
+                    return proFreezes.length > 0 || getVideoAnalysisComplexity() >= 8 || (Number(settings.fps) || 30) > 30;
+                }
+
                 function drawVideo16x9(ctx, videoEl, canvasW, canvasH) {
                     drawSource16x9(ctx, videoEl, videoEl.videoWidth || canvasW, videoEl.videoHeight || canvasH, canvasW, canvasH);
                 }
@@ -6490,22 +6561,28 @@
                         await waitForExportVideoReady(exportVideo);
 
                         const virtualDuration = Math.min(getVirtualDuration() || proVideo.duration || 0, maxDuration);
-                        const preferredMime = getSupportedVideoMime() || 'video/webm';
-                        const preferredExt = getVideoMimeExtension(preferredMime);
-                        if (exportBtn) exportBtn.innerText = 'Hizli render basliyor...';
-                        await recordSmoothRealtimeWebM(
-                            exportCanvas,
-                            exportVideo,
-                            (sourceTime, freezeContext) => drawExportFrame(sourceTime, freezeContext),
-                            virtualDuration,
-                            fps,
-                            `${proSourceFileName || 'Clutch_VideoAnaliz_Edit'}_${settings.resolutionKey || '1080'}p_${fps}fps.${preferredExt}`,
-                            exportBtn,
-                            settings.bitrate,
-                            settings.saveHandle,
-                            settings.savePath
-                        );
-                        showToast((getVirtualDuration() || 0) > maxDuration ? `İlk 1 dakika hızlı ${preferredExt.toUpperCase()} indirildi.` : `${fps} FPS ${preferredExt.toUpperCase()} indirildi.`);
+                        if (shouldUseStableExport(settings)) {
+                            showToast('Coklu arac/freeze algilandi, stabil render basladi...');
+                            if (exportBtn) exportBtn.innerText = 'Stabil render basliyor...';
+                            await renderFixedFrameExport();
+                        } else {
+                            const preferredMime = getSupportedVideoMime() || 'video/webm';
+                            const preferredExt = getVideoMimeExtension(preferredMime);
+                            if (exportBtn) exportBtn.innerText = 'Hizli render basliyor...';
+                            await recordSmoothRealtimeWebM(
+                                exportCanvas,
+                                exportVideo,
+                                (sourceTime, freezeContext) => drawExportFrame(sourceTime, freezeContext),
+                                virtualDuration,
+                                fps,
+                                `${proSourceFileName || 'Clutch_VideoAnaliz_Edit'}_${settings.resolutionKey || '1080'}p_${fps}fps.${preferredExt}`,
+                                exportBtn,
+                                settings.bitrate,
+                                settings.saveHandle,
+                                settings.savePath
+                            );
+                            showToast((getVirtualDuration() || 0) > maxDuration ? `İlk 1 dakika hızlı ${preferredExt.toUpperCase()} indirildi.` : `${fps} FPS ${preferredExt.toUpperCase()} indirildi.`);
+                        }
                     } catch (err) {
                         console.error('Video export hatasi:', err);
                         try {
