@@ -3529,6 +3529,8 @@
                 let proAnimationScale = 1;
                 let activePlaybackFreezeElapsed = 0;
                 let proPlaybackRenderFrame = null;
+                let proTimelineHoldTime = null;
+                let proTimelineHoldUntil = 0;
 
                 function getClipStart() {
                     return Math.max(0, proMainVideoClip ? Number(proMainVideoClip.start) || 0 : 0);
@@ -3561,7 +3563,7 @@
                 function getSortedFreezes() {
                     return [...(proFreezes || [])]
                         .filter(f => isVideoTimeInClip(Number(f.time) || 0))
-                        .sort((a, b) => (a.time || 0) - (b.time || 0));
+                        .sort((a, b) => ((a.time || 0) - (b.time || 0)) || String(a.id || '').localeCompare(String(b.id || '')));
                 }
 
                 function getFreezeTimelineStart(freeze) {
@@ -3578,7 +3580,7 @@
                     const clippedVideoTime = Math.max(getClipStart(), Math.min(getClipEnd(), Number(videoTime) || 0));
                     let extra = 0;
                     for (const f of getSortedFreezes()) {
-                        if ((f.time || 0) <= clippedVideoTime) extra += Number(f.duration) || 0;
+                        if ((f.time || 0) < clippedVideoTime - 0.001) extra += Number(f.duration) || 0;
                     }
                     return Math.max(0, clippedVideoTime - getClipStart()) + extra;
                 }
@@ -3588,7 +3590,7 @@
                     for (const f of getSortedFreezes()) {
                         const start = Math.max(0, (f.time || 0) - getClipStart()) + extra;
                         const end = start + (Number(f.duration) || 0);
-                        if (timelineTime >= start && timelineTime <= end) return f.time || 0;
+                        if (timelineTime >= start && timelineTime < end - 0.001) return f.time || 0;
                         if (timelineTime > end) extra += Number(f.duration) || 0;
                     }
                     return Math.max(getClipStart(), Math.min(getClipEnd(), getClipStart() + timelineTime - extra));
@@ -3597,7 +3599,7 @@
                 function getFreezeAtTimelineTime(timelineTime) {
                     return getSortedFreezes().find(f => {
                         const start = getFreezeTimelineStart(f);
-                        return timelineTime >= start && timelineTime <= start + (Number(f.duration) || 0);
+                        return timelineTime >= start && timelineTime < start + (Number(f.duration) || 0) - 0.001;
                     }) || null;
                 }
 
@@ -3626,7 +3628,25 @@
 
                 function getCurrentTimelineTime() {
                     if (activePlaybackFreeze) return getFreezeTimelineStart(activePlaybackFreeze) + (activePlaybackFreezeElapsed / 1000);
-                    return videoToTimelineTime(proVideo ? proVideo.currentTime || 0 : 0);
+                    const actualTimelineTime = videoToTimelineTime(proVideo ? proVideo.currentTime || 0 : 0);
+                    if (proTimelineHoldTime !== null) {
+                        if (performance.now() < proTimelineHoldUntil && actualTimelineTime < proTimelineHoldTime - 0.04) {
+                            return proTimelineHoldTime;
+                        }
+                        proTimelineHoldTime = null;
+                        proTimelineHoldUntil = 0;
+                    }
+                    return actualTimelineTime;
+                }
+
+                function holdTimelineAt(timelineTime, ms = 700) {
+                    proTimelineHoldTime = Math.max(0, Number(timelineTime) || 0);
+                    proTimelineHoldUntil = performance.now() + ms;
+                }
+
+                function clearTimelineHold() {
+                    proTimelineHoldTime = null;
+                    proTimelineHoldUntil = 0;
                 }
 
                 function clamp01(value) {
@@ -4257,6 +4277,8 @@
                     const file = event.target.files[0];
                     if (!file) return;
 
+                    clearTimelineHold();
+                    clearFreezePlaybackGuards();
                     proSourceFileName = (file.name || 'Clutch_VideoAnaliz_Edit').replace(/\.[^.]+$/, '');
                     const videoUrl = URL.createObjectURL(file);
                     proVideo.src = videoUrl;
@@ -4549,6 +4571,16 @@
                     proPlaybackRenderFrame = requestAnimationFrame(tick);
                 }
 
+                function stopProPlaybackRenderLoop() {
+                    if (proPlaybackRenderFrame) cancelAnimationFrame(proPlaybackRenderFrame);
+                    proPlaybackRenderFrame = null;
+                }
+
+                function stopProAnnotationAnimation() {
+                    if (proAnnotationAnimFrame) cancelAnimationFrame(proAnnotationAnimFrame);
+                    proAnnotationAnimFrame = null;
+                }
+
                 function getProMousePos(evt) {
                     if (!proCanvas) return { x: 0, y: 0 };
                     const rect = proCanvas.getBoundingClientRect();
@@ -4822,6 +4854,7 @@
 
                 function seekVirtualTimeline(timelineTime) {
                     if (!proVideo || !proVideo.duration) return;
+                    clearTimelineHold();
                     const freeze = getFreezeAtTimelineTime(timelineTime);
                     if (freeze) {
                         selectTimelineItem('freeze', freeze.id);
@@ -5073,7 +5106,7 @@
                 function renderAnnotationsOnVideo() {
                     if (!proCtx || !proCanvas) return;
                     const selectedFreeze = selectedTimelineItem && selectedTimelineItem.type === 'freeze' ? getFreezeById(selectedTimelineItem.id) : null;
-                    const canPreviewSelectedFreeze = selectedFreeze && proVideo && proVideo.paused && Math.abs((proVideo.currentTime || 0) - (selectedFreeze.time || 0)) < 0.08;
+                    const canPreviewSelectedFreeze = selectedFreeze && proVideo && proVideo.paused && Math.abs((proVideo.currentTime || 0) - (selectedFreeze.time || 0)) < 0.035;
                     const freezeContext = activePlaybackFreeze || (canPreviewSelectedFreeze ? selectedFreeze : null);
                     const t = freezeContext ? freezeContext.time : proVideo.currentTime;
                     const now = performance.now();
@@ -5359,7 +5392,7 @@
                         : proCtx.getImageData(0, 0, proCanvas.width, proCanvas.height);
 
                     const freeze = {
-                        id: Date.now(),
+                        id: `freeze-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
                         time: freezeTime,
                         duration: duration,
                         imageData: drawingData,
@@ -5383,6 +5416,7 @@
                 function stepFrame(dir) {
                     if (!proVideo || !proVideo.duration) return;
                     if (!proVideo.paused) proVideo.pause();
+                    clearTimelineHold();
                     proVideo.currentTime = Math.max(getClipStart(), Math.min(getClipEnd(), proVideo.currentTime + (dir * (1 / 30))));
                 }
 
@@ -5518,6 +5552,7 @@
                     proDrawingSegments = proDrawingSegments.filter(seg => !seg.freezeId || !freezeIds.has(String(seg.freezeId)));
                     activePlaybackFreeze = null;
                     activePlaybackFreezeElapsed = 0;
+                    clearTimelineHold();
                     if (selectedTimelineItem && selectedTimelineItem.type === 'freeze') selectedTimelineItem = null;
                     renderFreezeTrack();
                     renderDrawingSegments();
@@ -5531,6 +5566,98 @@
                 let freezeActive = false;
                 let freezeTimeout = null;
                 let lastFreezeCheckTime = 0;
+                let lastCompletedFreezeId = null;
+                let lastCompletedFreezeGuardUntil = 0;
+                let freezePlaybackStackIds = new Set();
+                let freezeInternalSeekUntil = 0;
+                const FREEZE_PLAYBACK_EPSILON = 0.012;
+                const FREEZE_RESUME_OFFSET = 0.08;
+                const FREEZE_STACK_WINDOW = 0.04;
+
+                function clearFreezePlaybackGuards() {
+                    lastCompletedFreezeId = null;
+                    lastCompletedFreezeGuardUntil = 0;
+                    freezePlaybackStackIds.clear();
+                }
+
+                function markFreezeInternalSeek() {
+                    freezeInternalSeekUntil = performance.now() + 900;
+                }
+
+                function isFreezeInternalSeek() {
+                    return performance.now() < freezeInternalSeekUntil;
+                }
+
+                function getNextCrossedFreeze(prevTime, currentTime) {
+                    if (!proFreezes.length || currentTime < prevTime - 0.05) return null;
+                    const prev = Number(prevTime) || 0;
+                    const current = Number(currentTime) || 0;
+                    if (lastCompletedFreezeId && current > lastCompletedFreezeGuardUntil) {
+                        clearFreezePlaybackGuards();
+                    }
+                    return getSortedFreezes().find(f => {
+                        const freezeTime = Number(f.time) || 0;
+                        if (lastCompletedFreezeId === String(f.id) && current <= lastCompletedFreezeGuardUntil) return false;
+                        const crossedFreeze = prev < freezeTime - FREEZE_PLAYBACK_EPSILON && current >= freezeTime - FREEZE_PLAYBACK_EPSILON;
+                        const startedOnFreeze = Math.abs(prev - freezeTime) <= FREEZE_PLAYBACK_EPSILON && current > freezeTime;
+                        return crossedFreeze || startedOnFreeze;
+                    }) || null;
+                }
+
+                function getNextStackedFreeze(freeze) {
+                    const freezeTime = Number(freeze && freeze.time) || 0;
+                    return getSortedFreezes().find(f => {
+                        const id = String(f.id);
+                        if (freezePlaybackStackIds.has(id)) return false;
+                        return Math.abs((Number(f.time) || 0) - freezeTime) <= FREEZE_STACK_WINDOW;
+                    }) || null;
+                }
+
+                function startPlaybackFreeze(freeze, keepStack = false) {
+                    if (!freeze || !proVideo) return;
+                    clearTimelineHold();
+                    if (!keepStack) freezePlaybackStackIds.clear();
+                    freezePlaybackStackIds.add(String(freeze.id));
+                    const freezeTime = Number(freeze.time) || 0;
+                    freezeActive = true;
+                    proVideo.pause();
+                    markFreezeInternalSeek();
+                    proVideo.currentTime = freezeTime;
+                    lastFreezeCheckTime = freezeTime;
+                    activePlaybackFreeze = freeze;
+                    activePlaybackFreezeElapsed = 0;
+                    renderAnnotationsOnVideo();
+                    updateTimelineUi();
+                    animateFreezeDrawing(freeze, freeze.duration * 1000, () => finishPlaybackFreeze(freeze));
+                }
+
+                function finishPlaybackFreeze(freeze) {
+                    const freezeTime = Number(freeze.time) || 0;
+                    const nextStackedFreeze = getNextStackedFreeze(freeze);
+                    if (nextStackedFreeze) {
+                        startPlaybackFreeze(nextStackedFreeze, true);
+                        return;
+                    }
+                    freezeActive = false;
+                    activePlaybackFreeze = null;
+                    activePlaybackFreezeElapsed = 0;
+                    lastCompletedFreezeId = String(freeze.id);
+                    lastCompletedFreezeGuardUntil = freezeTime + 0.35;
+                    freezePlaybackStackIds.clear();
+                    holdTimelineAt(getFreezeTimelineStart(freeze) + (Number(freeze.duration) || 0));
+                    const resumeLimit = proMainVideoClip ? getClipEnd() : (proVideo.duration || getClipEnd());
+                    const resumeTime = Math.min(resumeLimit, freezeTime + FREEZE_RESUME_OFFSET);
+                    markFreezeInternalSeek();
+                    proVideo.currentTime = resumeTime;
+                    lastFreezeCheckTime = resumeTime;
+                    renderAnnotationsOnVideo();
+                    updateTimelineUi();
+                    proVideo.play().catch(() => {
+                        setTimeout(() => {
+                            if (proVideo && proVideo.paused && !freezeActive) proVideo.play().catch(() => {});
+                        }, 120);
+                    });
+                }
 
                 if (proVideo) {
                     proVideo.addEventListener('play', () => {
@@ -5542,36 +5669,14 @@
                         const prev = lastFreezeCheckTime;
                         lastFreezeCheckTime = t;
 
-                        for (const f of proFreezes) {
-                            // Freeze noktasına 0.05 sn yakınlıktaysa tetikle
-                            const crossedFreeze = prev <= f.time && t >= f.time;
-                            const closeToFreeze = Math.abs(t - f.time) < 0.2;
-                            if ((crossedFreeze || closeToFreeze) && !f._played) {
-                                f._played = true;
-                                freezeActive = true;
-                                proVideo.pause();
-                                proVideo.currentTime = f.time;
-                                lastFreezeCheckTime = f.time;
-                                activePlaybackFreeze = f;
-                                activePlaybackFreezeElapsed = 0;
-                                renderAnnotationsOnVideo();
-
-                                animateFreezeDrawing(f, f.duration * 1000, () => {
-                                    freezeActive = false;
-                                    activePlaybackFreeze = null;
-                                    activePlaybackFreezeElapsed = 0;
-                                    proVideo.currentTime = Math.min(proVideo.duration, f.time + 0.04);
-                                    lastFreezeCheckTime = proVideo.currentTime;
-                                    renderAnnotationsOnVideo();
-                                    proVideo.play();
-                                });
-                                return;
-                            }
-                            // Oynatma ileri gidince _played flag'ini temizle
-                            if (t < f.time - 0.5 || t > f.time + Math.max(1, Number(f.duration || 0) + 0.5)) f._played = false;
+                        const freeze = getNextCrossedFreeze(prev, t);
+                        if (freeze) {
+                            startPlaybackFreeze(freeze);
+                            return;
                         }
                     });
                     proVideo.addEventListener('seeked', () => {
+                        if (!isFreezeInternalSeek()) clearFreezePlaybackGuards();
                         lastFreezeCheckTime = proVideo.currentTime || 0;
                     });
                 }
@@ -5918,11 +6023,16 @@
                     return webmExtractVp8(new Uint8Array(await blob.arrayBuffer()));
                 }
 
-                async function downloadVideoBlob(blob, fileName, saveHandle) {
+                async function downloadVideoBlob(blob, fileName, saveHandle, savePath = null) {
                     if (saveHandle) {
                         const writable = await saveHandle.createWritable();
                         await writable.write(blob);
                         await writable.close();
+                        return;
+                    }
+                    if (savePath) {
+                        const buffer = Buffer.from(await blob.arrayBuffer());
+                        await require('fs').promises.writeFile(savePath, buffer);
                         return;
                     }
                     const url = URL.createObjectURL(blob);
@@ -5933,6 +6043,15 @@
                     a.click();
                     a.remove();
                     URL.revokeObjectURL(url);
+                }
+
+                function getVideoMimeExtension(mimeType) {
+                    return String(mimeType || '').includes('mp4') ? 'mp4' : 'webm';
+                }
+
+                function withVideoExtension(fileName, mimeType) {
+                    const ext = getVideoMimeExtension(mimeType);
+                    return String(fileName || `Clutch_VideoAnaliz_Edit.${ext}`).replace(/\.(webm|mp4)$/i, `.${ext}`);
                 }
 
                 async function recordStabilizedWebM(canvas, drawFrame, duration, fps, fileName, exportBtn, bitrate = 24000000, saveHandle = null) {
@@ -5968,7 +6087,7 @@
                     chunks.length = 0;
                 }
 
-                async function recordSmoothRealtimeWebM(canvas, videoEl, drawFrame, duration, fps, fileName, exportBtn, bitrate = 24000000, saveHandle = null) {
+                async function recordSmoothRealtimeWebM(canvas, videoEl, drawFrame, duration, fps, fileName, exportBtn, bitrate = 24000000, saveHandle = null, savePath = null) {
                     const mimeType = getSupportedVideoMime() || 'video/webm';
                     const stream = canvas.captureStream(fps);
                     const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: bitrate });
@@ -5978,52 +6097,61 @@
                         recorder.onstop = () => resolve(new Blob(chunks, { type: mimeType }));
                     });
 
-                    await waitForExportVideoSeek(videoEl, timelineToVideoTime(0));
-                    videoEl.playbackRate = 1;
-                    await videoEl.play().catch(() => {});
+                    let loopError = null;
+                    let recorderStarted = false;
+                    try {
+                        await waitForExportVideoSeek(videoEl, timelineToVideoTime(0));
+                        videoEl.playbackRate = 1;
+                        await videoEl.play().catch(() => {});
 
-                    recorder.start(250);
-                    const start = performance.now();
-                    let lastPct = -1;
-                    let lastSyncAt = 0;
+                        recorder.start(250);
+                        recorderStarted = true;
+                        const start = performance.now();
+                        let lastPct = -1;
+                        let lastSyncAt = 0;
 
-                    while (true) {
-                        const timelineTime = Math.min(duration, (performance.now() - start) / 1000);
-                        const activeFreeze = getFreezeAtTimelineTime(timelineTime + (0.5 / fps));
-                        const upcomingFreeze = activeFreeze ? null : getUpcomingFreezeAtTimelineTime(timelineTime, 1);
-                        const sourceTime = activeFreeze ? activeFreeze.time || 0 : timelineToVideoTime(timelineTime);
+                        while (true) {
+                            const timelineTime = Math.min(duration, (performance.now() - start) / 1000);
+                            const activeFreeze = getFreezeAtTimelineTime(timelineTime + (0.5 / fps));
+                            const upcomingFreeze = activeFreeze ? null : getUpcomingFreezeAtTimelineTime(timelineTime, 1);
+                            const sourceTime = activeFreeze ? activeFreeze.time || 0 : timelineToVideoTime(timelineTime);
 
-                        if (activeFreeze) {
-                            if (!videoEl.paused) videoEl.pause();
-                        } else {
-                            const drift = Math.abs((videoEl.currentTime || 0) - sourceTime);
-                            if (!upcomingFreeze && drift > 0.75 && timelineTime - lastSyncAt > 0.7) {
-                                lastSyncAt = timelineTime;
-                                await waitForExportVideoSeek(videoEl, sourceTime);
+                            if (activeFreeze) {
+                                if (!videoEl.paused) videoEl.pause();
+                            } else {
+                                const drift = Math.abs((videoEl.currentTime || 0) - sourceTime);
+                                if (!upcomingFreeze && drift > 0.55 && timelineTime - lastSyncAt > 0.5) {
+                                    lastSyncAt = timelineTime;
+                                    await waitForExportVideoSeek(videoEl, sourceTime);
+                                }
+                                if (videoEl.paused) await videoEl.play().catch(() => {});
                             }
-                            if (videoEl.paused) await videoEl.play().catch(() => {});
-                        }
 
-                        drawFrame(sourceTime, activeFreeze);
+                            drawFrame(sourceTime, activeFreeze);
 
-                        if (exportBtn) {
-                            const pct = Math.min(100, Math.round((timelineTime / Math.max(0.01, duration)) * 100));
-                            if (pct !== lastPct && pct % 5 === 0) {
-                                lastPct = pct;
-                                exportBtn.innerText = `Akici render... %${pct}`;
+                            if (exportBtn) {
+                                const pct = Math.min(100, Math.round((timelineTime / Math.max(0.01, duration)) * 100));
+                                if (pct !== lastPct && pct % 5 === 0) {
+                                    lastPct = pct;
+                                    exportBtn.innerText = `Hizli render... %${pct}`;
+                                }
                             }
-                        }
 
-                        if (timelineTime >= duration) break;
-                        await nextExportFrame();
+                            if (timelineTime >= duration) break;
+                            await nextExportFrame();
+                        }
+                    } catch (err) {
+                        loopError = err;
+                    } finally {
+                        videoEl.pause();
+                        if (recorderStarted && recorder.state !== 'inactive') recorder.stop();
                     }
 
-                    videoEl.pause();
-                    if (recorder.state !== 'inactive') recorder.stop();
-                    const blob = await done;
+                    const blob = recorderStarted ? await done : new Blob([], { type: mimeType });
                     stream.getTracks().forEach(track => track.stop());
-                    await downloadVideoBlob(blob, fileName, saveHandle);
                     chunks.length = 0;
+                    if (loopError) throw loopError;
+                    await downloadVideoBlob(blob, withVideoExtension(fileName, mimeType), saveHandle, savePath);
                 }
 
                 const PRO_VIDEO_EXPORT = {
@@ -6035,6 +6163,7 @@
                 };
 
                 let selectedVideoExportFileHandle = null;
+                let selectedVideoExportFilePath = null;
                 const VIDEO_EXPORT_PRESETS = {
                     bitrate: {
                         minimum: { value: 8000000, frameQuality: 0.78 },
@@ -6084,29 +6213,55 @@
                         fps,
                         bitrate: bitratePreset.value,
                         frameQuality: bitratePreset.frameQuality,
-                        saveHandle: selectedVideoExportFileHandle
+                        saveHandle: selectedVideoExportFileHandle,
+                        savePath: selectedVideoExportFilePath
                     };
                 }
 
                 async function chooseVideoExportFile() {
-                    const fileName = `${proSourceFileName || 'Clutch_VideoAnaliz_Edit'}_export.webm`;
-                    if (!window.showSaveFilePicker) {
-                        selectedVideoExportFileHandle = null;
-                        const label = document.getElementById('videoExportSaveLabel');
-                        if (label) label.innerText = 'Bu ortam dosya konumu sectirmiyor; varsayilan indirme kullanilir.';
-                        if (typeof showToast === 'function') showToast('Dosya secimi desteklenmiyor, varsayilan indirme kullanilacak.');
-                        return;
-                    }
+                    const mimeType = getSupportedVideoMime() || 'video/webm';
+                    const ext = getVideoMimeExtension(mimeType);
+                    const pickerMime = ext === 'mp4' ? 'video/mp4' : 'video/webm';
+                    const fileName = `${proSourceFileName || 'Clutch_VideoAnaliz_Edit'}_export.${ext}`;
+                    const label = document.getElementById('videoExportSaveLabel');
+
                     try {
-                        selectedVideoExportFileHandle = await window.showSaveFilePicker({
-                            suggestedName: fileName,
-                            types: [{ description: 'WebM Video', accept: { 'video/webm': ['.webm'] } }]
-                        });
-                        const label = document.getElementById('videoExportSaveLabel');
-                        if (label) label.innerText = selectedVideoExportFileHandle.name || fileName;
+                        if (window.showSaveFilePicker) {
+                            selectedVideoExportFileHandle = await window.showSaveFilePicker({
+                                suggestedName: fileName,
+                                types: [{ description: `${ext.toUpperCase()} Video`, accept: { [pickerMime]: [`.${ext}`] } }]
+                            });
+                            selectedVideoExportFilePath = null;
+                            if (label) label.innerText = selectedVideoExportFileHandle.name || fileName;
+                            return;
+                        }
                     } catch (err) {
-                        if (err && err.name !== 'AbortError') console.warn('Dosya secimi hatasi:', err);
+                        if (err && err.name === 'AbortError') return;
+                        console.warn('Dosya secimi hatasi:', err);
                     }
+
+                    try {
+                        const electron = typeof require === 'function' ? require('electron') : null;
+                        const result = electron && electron.ipcRenderer
+                            ? await electron.ipcRenderer.invoke('choose-video-export-path', { defaultName: fileName, ext })
+                            : null;
+                        if (result && !result.canceled && result.filePath) {
+                            selectedVideoExportFileHandle = null;
+                            selectedVideoExportFilePath = result.filePath;
+                            if (label) {
+                                const parts = String(result.filePath).split(/[\\/]/);
+                                label.innerText = parts[parts.length - 1] || fileName;
+                            }
+                            return;
+                        }
+                    } catch (err) {
+                        console.warn('Electron dosya secimi hatasi:', err);
+                    }
+
+                    selectedVideoExportFileHandle = null;
+                    selectedVideoExportFilePath = null;
+                    if (label) label.innerText = 'Konum secilemedi, varsayilan indirme kullanilir.';
+                    if (typeof showToast === 'function') showToast('Dosya secimi acilamadi, varsayilan indirme kullanilacak.');
                 }
 
                 async function startVideoExportFromModal() {
@@ -6204,7 +6359,7 @@
                         exportBtn.disabled = true;
                         exportBtn.innerText = 'Kare render hazirlaniyor...';
                     }
-                    showToast('Hizli sabit kare render basladi. Maksimum 1 dakika WebM hazirlaniyor...');
+                    showToast('Hizli render basladi. Maksimum 1 dakika video hazirlaniyor...');
 
                     await ensureClutchWatermarkLogo();
                     const exportCanvas = document.createElement('canvas');
@@ -6223,6 +6378,8 @@
                     const previousRate = proVideo.playbackRate;
                     const wasMuted = proVideo.muted;
                     const wasPaused = proVideo.paused;
+                    const previousActiveFreeze = activePlaybackFreeze;
+                    const previousActiveFreezeElapsed = activePlaybackFreezeElapsed;
                     const wrapperRect = document.querySelector('.video-container-wrapper').getBoundingClientRect();
                     const textOverlays = Array.from(document.querySelectorAll('.video-draggable-text')).map(el => {
                         const elRect = el.getBoundingClientRect();
@@ -6275,7 +6432,45 @@
                         drawClutchWatermark(expCtx, exportCanvas.width, exportCanvas.height);
                     }
 
+                    async function renderFixedFrameExport() {
+                        const virtualDuration = Math.min(getVirtualDuration() || proVideo.duration || 0, maxDuration);
+                        const totalFrames = Math.max(1, Math.ceil(virtualDuration * fps));
+                        const progressStep = Math.max(1, Math.floor(totalFrames / 50));
+                        await waitForExportVideoSeek(exportVideo, timelineToVideoTime(0));
+
+                        for (let frame = 0; frame < totalFrames; frame++) {
+                            const timelineTime = Math.min(virtualDuration, frame / fps);
+                            activeFreeze = getFreezeAtTimelineTime(timelineTime);
+                            const sourceTime = activeFreeze ? activeFreeze.time || 0 : timelineToVideoTime(timelineTime);
+                            await waitForExportVideoSeek(exportVideo, sourceTime);
+                            drawExportFrame(sourceTime, activeFreeze);
+                            frames.push(await canvasToVp8Frame(exportCanvas, frameQuality));
+                            if (exportBtn && (frame % progressStep === 0 || frame === totalFrames - 1)) {
+                                const pct = Math.min(100, Math.round(((frame + 1) / totalFrames) * 100));
+                                if (pct !== lastProgressUpdate) {
+                                    lastProgressUpdate = pct;
+                                    exportBtn.innerText = `Sabit render... %${pct}`;
+                                }
+                            }
+                            if (frame % PRO_VIDEO_EXPORT.yieldEveryFrames === 0) await delay(0);
+                        }
+
+                        if (exportBtn) exportBtn.innerText = 'Video birlestiriliyor...';
+                        const blob = buildFixedFrameWebM(frames, exportCanvas.width, exportCanvas.height, fps);
+                        const fallbackHandle = settings.saveHandle && String(settings.saveHandle.name || '').toLowerCase().endsWith('.webm') ? settings.saveHandle : null;
+                        const fallbackPath = settings.savePath && String(settings.savePath || '').toLowerCase().endsWith('.webm') ? settings.savePath : null;
+                        await downloadVideoBlob(blob, `${proSourceFileName || 'Clutch_VideoAnaliz_Edit'}_stable_${settings.resolutionKey || '1080'}p_${fps}fps.webm`, fallbackHandle, fallbackPath);
+                        frames.length = 0;
+                        showToast((getVirtualDuration() || 0) > maxDuration ? 'İlk 1 dakika sabit WebM indirildi.' : `${fps} FPS sabit WebM indirildi.`);
+                    }
+
                     try {
+                        if (!proVideo.paused) proVideo.pause();
+                        stopProPlaybackRenderLoop();
+                        stopProAnnotationAnimation();
+                        activePlaybackFreeze = null;
+                        activePlaybackFreezeElapsed = 0;
+
                         exportVideo.src = proVideo.currentSrc || proVideo.src;
                         exportVideo.muted = true;
                         exportVideo.playsInline = true;
@@ -6285,51 +6480,30 @@
                         await waitForExportVideoReady(exportVideo);
 
                         const virtualDuration = Math.min(getVirtualDuration() || proVideo.duration || 0, maxDuration);
-                        if (exportBtn) exportBtn.innerText = 'Akici render basliyor...';
+                        const preferredMime = getSupportedVideoMime() || 'video/webm';
+                        const preferredExt = getVideoMimeExtension(preferredMime);
+                        if (exportBtn) exportBtn.innerText = 'Hizli render basliyor...';
                         await recordSmoothRealtimeWebM(
                             exportCanvas,
                             exportVideo,
                             (sourceTime, freezeContext) => drawExportFrame(sourceTime, freezeContext),
                             virtualDuration,
                             fps,
-                            `${proSourceFileName || 'Clutch_VideoAnaliz_Edit'}_${settings.resolutionKey || '1080'}p_${fps}fps.webm`,
+                            `${proSourceFileName || 'Clutch_VideoAnaliz_Edit'}_${settings.resolutionKey || '1080'}p_${fps}fps.${preferredExt}`,
                             exportBtn,
                             settings.bitrate,
-                            settings.saveHandle
+                            settings.saveHandle,
+                            settings.savePath
                         );
-                        showToast((getVirtualDuration() || 0) > maxDuration ? 'İlk 1 dakika akıcı WebM indirildi.' : `${fps} FPS WebM indirildi.`);
+                        showToast((getVirtualDuration() || 0) > maxDuration ? `İlk 1 dakika hızlı ${preferredExt.toUpperCase()} indirildi.` : `${fps} FPS ${preferredExt.toUpperCase()} indirildi.`);
                     } catch (err) {
                         console.error('Video export hatasi:', err);
                         try {
-                            showToast('Sabit kare yedek render deneniyor...');
-                            if (exportBtn) exportBtn.innerText = 'Sabit kare yedek...';
-                            const virtualDuration = Math.min(getVirtualDuration() || proVideo.duration || 0, maxDuration);
-                            const totalFrames = Math.max(1, Math.ceil(virtualDuration * fps));
-                            const progressStep = Math.max(1, Math.floor(totalFrames / 50));
-                            await waitForExportVideoSeek(exportVideo, 0);
-
-                            for (let frame = 0; frame < totalFrames; frame++) {
-                                const timelineTime = Math.min(virtualDuration, frame / fps);
-                                activeFreeze = getFreezeAtTimelineTime(timelineTime);
-                                const sourceTime = activeFreeze ? activeFreeze.time || 0 : timelineToVideoTime(timelineTime);
-                                await waitForExportVideoSeek(exportVideo, sourceTime);
-                                drawExportFrame(sourceTime, activeFreeze);
-                                frames.push(await canvasToVp8Frame(exportCanvas, frameQuality));
-                                if (exportBtn && (frame % progressStep === 0 || frame === totalFrames - 1)) {
-                                    const pct = Math.min(100, Math.round(((frame + 1) / totalFrames) * 100));
-                                    if (pct !== lastProgressUpdate) {
-                                        lastProgressUpdate = pct;
-                                        exportBtn.innerText = `Yedek render... %${pct}`;
-                                    }
-                                }
-                                if (frame % PRO_VIDEO_EXPORT.yieldEveryFrames === 0) await delay(0);
-                            }
-
-                            if (exportBtn) exportBtn.innerText = 'Video birlestiriliyor...';
-                            const blob = buildFixedFrameWebM(frames, exportCanvas.width, exportCanvas.height, fps);
-                            await downloadVideoBlob(blob, `${proSourceFileName || 'Clutch_VideoAnaliz_Edit'}_fixed_${settings.resolutionKey || '1080'}p_${fps}fps.webm`, settings.saveHandle);
+                            lastProgressUpdate = -1;
                             frames.length = 0;
-                            showToast(`Yedek ${fps} FPS WebM indirildi.`);
+                            showToast('Hizli render sorun cikardi, sabit yedek deneniyor...');
+                            if (exportBtn) exportBtn.innerText = 'Sabit yedek render...';
+                            await renderFixedFrameExport();
                         } catch (fallbackErr) {
                             console.error('Video fallback export hatasi:', fallbackErr);
                             showToast('Video hazirlanirken hata olustu.');
@@ -6346,6 +6520,8 @@
                         proVideo.playbackRate = previousRate;
                         proVideo.muted = wasMuted;
                         await waitForVideoSeek(previousTime);
+                        activePlaybackFreeze = previousActiveFreeze;
+                        activePlaybackFreezeElapsed = previousActiveFreezeElapsed;
                         if (!wasPaused) proVideo.play().catch(() => {});
                         frames.length = 0;
                         textOverlays.length = 0;
@@ -6358,7 +6534,9 @@
                         });
                         exportCanvas.width = 1;
                         exportCanvas.height = 1;
+                        stopProAnnotationAnimation();
                         renderAnnotationsOnVideo();
+                        updateTimelineUi();
                     }
                 }
 

@@ -1,10 +1,25 @@
-const { app, BrowserWindow, Menu, shell } = require('electron');
+const { app, BrowserWindow, Menu, shell, ipcMain, dialog } = require('electron');
 const path = require('path');
 
 // Disable hardware acceleration issues on some systems
 app.commandLine.appendSwitch('disable-gpu-sandbox');
 
 let mainWindow;
+
+ipcMain.handle('choose-video-export-path', async (event, options = {}) => {
+  const ext = String(options.ext || 'webm').replace(/^\./, '').toLowerCase() === 'mp4' ? 'mp4' : 'webm';
+  const defaultName = String(options.defaultName || `Clutch_VideoAnaliz_Edit.${ext}`);
+  const win = BrowserWindow.fromWebContents(event.sender) || mainWindow;
+  const result = await dialog.showSaveDialog(win, {
+    title: 'Video export kaydet',
+    defaultPath: defaultName,
+    filters: [{ name: `${ext.toUpperCase()} Video`, extensions: [ext] }]
+  });
+  return {
+    canceled: Boolean(result.canceled),
+    filePath: result.filePath || ''
+  };
+});
 
 function createWindow() {
   mainWindow = new BrowserWindow({
