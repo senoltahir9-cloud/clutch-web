@@ -1642,6 +1642,8 @@
                 <!-- === SEZON ANTRENMAN TAKİP SİSTEMİ === -->
                 <div class="training-tracker-section">
                     <div class="training-header">
+                        <button class="btn" onclick="downloadTrainingReportPDF()"
+                            style="padding: 10px 14px; font-size: 13px; color:#fff; border-color:rgba(255,255,255,0.16);">PDF Rapor</button>
                         <h3>🏋️ Sezon Antrenman Takibi</h3>
                         <button class="btn primary" onclick="openTrainingModal()"
                             style="padding: 10px 20px; font-size: 13px;">➕ Antrenman Yaptım</button>
@@ -2045,18 +2047,18 @@
 
             <!-- GİZLİ PDF ŞABLONU -->
             <div id="handoutPdfTemplate"
-                style="display: none; width: 794px; background: white; color: black; padding: 40px; font-family: sans-serif; box-sizing: border-box;">
+                style="display: none; width: 794px; background: white; color: black; padding: 0; font-family: Inter, Arial, sans-serif; box-sizing: border-box;">
                 <!-- Page 1 -->
                 <div id="hoPage1"
-                    style="width: 794px; height: 1123px; position: relative; box-sizing: border-box; display: flex; flex-direction: column; background: #fff; padding: 40px;">
+                    style="width: 794px; height: 1123px; position: relative; box-sizing: border-box; display: flex; flex-direction: column; background: #fff; padding: 34px;">
                     <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; padding:22px 24px; border-radius:22px; background:linear-gradient(135deg,#111217,#23252c); color:#fff;">
                         <img id="pdfHoMyLogo1" style="width: 100px; height: 100px; object-fit: contain; opacity: 0;">
                         <div style="text-align: center; flex: 1;">
                             <h1 id="pdfHoTitle"
-                                style="font-size: 32px; font-weight: 900; margin: 0; color: #111; letter-spacing: 1px;">
+                                style="font-size: 30px; font-weight: 950; margin: 0; color: #fff; letter-spacing: .4px;">
                                 TAKIM ADI U-14 KIZ</h1>
-                            <h2 style="font-size: 26px; font-weight: 800; margin: 10px 0 0 0; color: #333;">HAND-OUT
+                            <h2 style="font-size: 13px; font-weight: 900; margin: 10px 0 0 0; color: #ffb078; letter-spacing:2px;">SCOUT HAND-OUT
                             </h2>
                         </div>
                         <img id="pdfHoOppLogo1" style="width: 100px; height: 100px; object-fit: contain; opacity: 0;">
@@ -2109,7 +2111,7 @@
 
                 <!-- Page 2: Bireysel Rapor -->
                 <div id="hoPage2"
-                    style="width: 794px; height: 1123px; position: relative; box-sizing: border-box; background: #fff; padding: 40px;">
+                    style="width: 794px; height: 1123px; position: relative; box-sizing: border-box; background: #fff; padding: 34px;">
                     <div
                         style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
                         <img id="pdfHoMyLogo2" style="width: 80px; height: 80px; object-fit: contain; opacity: 0;">
@@ -3307,9 +3309,153 @@
                 }
 
                 // PDF İNDİRME FONKSİYONLARI
+                function reportSafe(value) {
+                    return String(value ?? '').replace(/[&<>"']/g, ch => ({
+                        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+                    })[ch]);
+                }
+
+                function reportDate(value = new Date()) {
+                    const date = value instanceof Date ? value : new Date(value);
+                    if (Number.isNaN(date.getTime())) return '-';
+                    return date.toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' });
+                }
+
+                function reportFileName(value) {
+                    return String(value || 'Clutch_Rapor')
+                        .trim()
+                        .replace(/[\\/:*?"<>|]+/g, '')
+                        .replace(/\s+/g, '_')
+                        .slice(0, 90) || 'Clutch_Rapor';
+                }
+
+                function reportMetric(label, value, tone = '#ff6b00') {
+                    return `
+                        <div style="border:1px solid #ececf2; border-radius:14px; padding:14px 16px; background:#fafafa;">
+                            <div style="font-size:10px; color:#777; font-weight:800; letter-spacing:.9px; text-transform:uppercase;">${reportSafe(label)}</div>
+                            <div style="font-size:25px; color:${tone}; font-weight:900; margin-top:5px; line-height:1;">${reportSafe(value)}</div>
+                        </div>`;
+                }
+
+                function buildReportShell({ eyebrow, title, subtitle, meta = [], body }) {
+                    const metaHtml = meta.filter(Boolean).map(item => `<span style="font-size:10px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; padding:7px 10px; border-radius:999px; background:rgba(255,255,255,.10); color:rgba(255,255,255,.78);">${reportSafe(item)}</span>`).join('');
+                    return `
+                        <div style="width:794px; background:#ffffff; color:#19191d; font-family:Inter, Arial, sans-serif; box-sizing:border-box; padding:34px;">
+                            <div style="border-radius:22px; background:linear-gradient(135deg,#111217 0%,#23252c 65%,#ff6b00 180%); color:#fff; padding:26px 28px; position:relative; overflow:hidden;">
+                                <div style="font-size:11px; font-weight:900; letter-spacing:1.7px; text-transform:uppercase; color:#ffb078;">${reportSafe(eyebrow || 'CLUTCH REPORT')}</div>
+                                <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:22px; margin-top:12px;">
+                                    <div>
+                                        <h1 style="margin:0; font-size:30px; line-height:1.06; letter-spacing:-.3px;">${reportSafe(title)}</h1>
+                                        <p style="margin:8px 0 0; color:rgba(255,255,255,.72); font-size:13px; line-height:1.45;">${reportSafe(subtitle || '')}</p>
+                                    </div>
+                                    <div style="text-align:right; font-weight:900; font-size:22px; color:#ff7a18;">CLUTCH</div>
+                                </div>
+                                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:18px;">${metaHtml}</div>
+                            </div>
+                            <div style="padding:24px 4px 10px;">${body}</div>
+                            <div style="margin-top:22px; padding-top:12px; border-top:1px solid #ececf2; display:flex; justify-content:space-between; color:#8c8c94; font-size:10px; font-weight:700;">
+                                <span>Clutch App tarafindan otomatik olusturuldu</span>
+                                <span>${reportDate(new Date())}</span>
+                            </div>
+                        </div>`;
+                }
+
+                async function saveReportPdfFromHtml(html, fileName, width = 794) {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.style.cssText = `position:fixed; left:-9999px; top:0; width:${width}px; background:#fff; z-index:-1;`;
+                    tempDiv.innerHTML = html;
+                    document.body.appendChild(tempDiv);
+
+                    try {
+                        const canvas = await html2canvas(tempDiv, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+                        const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+                        const pageWidth = pdf.internal.pageSize.getWidth();
+                        const pageHeight = pdf.internal.pageSize.getHeight();
+                        const imgWidth = pageWidth;
+                        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                        const imgData = canvas.toDataURL('image/jpeg', 0.96);
+                        let heightLeft = imgHeight;
+                        let position = 0;
+
+                        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+                        heightLeft -= pageHeight;
+                        while (heightLeft > 1) {
+                            position -= pageHeight;
+                            pdf.addPage();
+                            pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+                            heightLeft -= pageHeight;
+                        }
+                        pdf.save(fileName);
+                    } finally {
+                        document.body.removeChild(tempDiv);
+                    }
+                }
+
                 async function downloadMatchPDF(id) {
                     const match = await db.matches.get(Number(id));
                     if (!match) return;
+
+                    const scoreParts = String(match.score || '').split('-').map(s => Number(s.trim()));
+                    const hasScore = scoreParts.length === 2 && scoreParts.every(Number.isFinite);
+                    const resultLabel = hasScore ? (scoreParts[0] > scoreParts[1] ? 'Galibiyet' : scoreParts[0] < scoreParts[1] ? 'Maglubiyet' : 'Beraberlik') : 'Planlandi';
+                    const resultTone = resultLabel === 'Galibiyet' ? '#1f9d63' : resultLabel === 'Maglubiyet' ? '#d64545' : '#ff6b00';
+                    const sorted = [...(match.playerStats || [])].sort((a, b) => Number(b.points || 0) - Number(a.points || 0));
+                    const topScorer = sorted[0] ? `${sorted[0].name} (${sorted[0].points})` : '-';
+                    const scorersRows = sorted.length
+                        ? sorted.map((s, index) => `
+                            <tr>
+                                <td style="padding:10px 12px; border-bottom:1px solid #ececf2; color:#777; font-weight:800;">${index + 1}</td>
+                                <td style="padding:10px 12px; border-bottom:1px solid #ececf2; font-weight:800;">${reportSafe(s.name)}</td>
+                                <td style="padding:10px 12px; border-bottom:1px solid #ececf2; text-align:right; font-weight:900; color:#ff6b00;">${reportSafe(s.points)} sayi</td>
+                            </tr>`).join('')
+                        : `<tr><td colspan="3" style="padding:18px 12px; color:#888; text-align:center;">Bu mac icin skorer girilmedi.</td></tr>`;
+
+                    const body = `
+                        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:18px;">
+                            ${reportMetric('Sonuc', resultLabel, resultTone)}
+                            ${reportMetric('Skor', match.score || '-', '#ff6b00')}
+                            ${reportMetric('Kategori', match.generation || '-', '#2d98da')}
+                            ${reportMetric('En Skorer', topScorer, '#111217')}
+                        </div>
+                        <div style="border:1px solid #ececf2; border-radius:18px; overflow:hidden; margin-bottom:18px;">
+                            <div style="display:grid; grid-template-columns:1fr 150px 1fr; align-items:center; background:#fafafa;">
+                                <div style="padding:22px; text-align:center;">
+                                    <div style="font-size:11px; color:#888; font-weight:900; text-transform:uppercase;">Bizim Takim</div>
+                                    <div style="font-size:21px; font-weight:900; margin-top:7px;">${reportSafe(match.teamName || '-')}</div>
+                                </div>
+                                <div style="padding:22px 10px; text-align:center; border-left:1px solid #ececf2; border-right:1px solid #ececf2;">
+                                    <div style="font-size:30px; font-weight:950; color:#ff6b00; letter-spacing:.5px;">${reportSafe(match.score || '-')}</div>
+                                    <div style="font-size:11px; color:#777; font-weight:800; margin-top:5px;">${reportDate(match.date)}</div>
+                                </div>
+                                <div style="padding:22px; text-align:center;">
+                                    <div style="font-size:11px; color:#888; font-weight:900; text-transform:uppercase;">Rakip</div>
+                                    <div style="font-size:21px; font-weight:900; margin-top:7px;">${reportSafe(match.opponent || '-')}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 style="font-size:15px; margin:20px 0 10px;">Oyuncu Skor Dagilimi</h2>
+                        <table style="width:100%; border-collapse:collapse; font-size:12px; border:1px solid #ececf2; border-radius:14px; overflow:hidden;">
+                            <thead>
+                                <tr style="background:#111217; color:#fff;">
+                                    <th style="padding:10px 12px; text-align:left; width:52px;">#</th>
+                                    <th style="padding:10px 12px; text-align:left;">Oyuncu</th>
+                                    <th style="padding:10px 12px; text-align:right;">Sayi</th>
+                                </tr>
+                            </thead>
+                            <tbody>${scorersRows}</tbody>
+                        </table>`;
+
+                    const html = buildReportShell({
+                        eyebrow: 'Mac Raporu',
+                        title: `${match.teamName || 'Takim'} vs ${match.opponent || 'Rakip'}`,
+                        subtitle: 'Mac sonucu, kategori bilgisi ve oyuncu skor dagilimi.',
+                        meta: [match.generation, match.leagueLevel, match.gender || 'Erkek', reportDate(match.date)],
+                        body
+                    });
+
+                    await saveReportPdfFromHtml(html, `${reportFileName(match.date + '_' + match.opponent)}_Mac_Raporu.pdf`);
+                    showToast('PDF basariyla olusturuldu!');
+                    return;
 
                     const tempDiv = document.createElement('div');
                     tempDiv.style.cssText = 'position:fixed; left:-9999px; top:0; width:600px; background:#fff; color:#000; padding:40px; font-family:Arial, sans-serif;';
@@ -3393,6 +3539,64 @@
                 async function downloadTeamReportPDF() {
                     const players = await db.players.where('teamId').equals(window.activeTeamId || 1).toArray();
                     if (players.length === 0) return showToast('Takımda henüz oyuncu bulunmuyor!');
+
+                    const measuredPlayers = players.filter(p => p.measurements && p.measurements.length > 0);
+                    const positions = [...new Set(players.map(p => p.pos).filter(Boolean))].join(', ') || '-';
+                    const rows = players.map((p, index) => {
+                        const last = p.measurements && p.measurements.length > 0 ? p.measurements[p.measurements.length - 1] : {};
+                        return `
+                            <tr>
+                                <td style="padding:9px 10px; border-bottom:1px solid #ececf2; color:#777; font-weight:800;">${index + 1}</td>
+                                <td style="padding:9px 10px; border-bottom:1px solid #ececf2; font-weight:900;">${reportSafe(p.name)}</td>
+                                <td style="padding:9px 10px; border-bottom:1px solid #ececf2; text-align:center;">${reportSafe(p.pos || '-')}</td>
+                                <td style="padding:9px 10px; border-bottom:1px solid #ececf2; text-align:center;">${reportSafe(last.height || '-')}</td>
+                                <td style="padding:9px 10px; border-bottom:1px solid #ececf2; text-align:center;">${reportSafe(last.weight || '-')}</td>
+                                <td style="padding:9px 10px; border-bottom:1px solid #ececf2; text-align:center;">${reportSafe(last.wingspan || '-')}</td>
+                                <td style="padding:9px 10px; border-bottom:1px solid #ececf2; text-align:center;">${reportSafe(last.shoeSize || '-')}</td>
+                                <td style="padding:9px 10px; border-bottom:1px solid #ececf2; text-align:right; color:#777;">${reportSafe(last.date || '-')}</td>
+                            </tr>`;
+                    }).join('');
+
+                    const body = `
+                        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:18px;">
+                            ${reportMetric('Oyuncu', players.length, '#ff6b00')}
+                            ${reportMetric('Olcumlu', measuredPlayers.length, '#1f9d63')}
+                            ${reportMetric('Veri Orani', `${Math.round((measuredPlayers.length / players.length) * 100)}%`, '#2d98da')}
+                            ${reportMetric('Mevkiler', positions, '#111217')}
+                        </div>
+                        <div style="border:1px solid #ececf2; border-radius:16px; padding:16px; background:#fafafa; margin-bottom:18px;">
+                            <div style="font-size:13px; line-height:1.55; color:#555;">
+                                Bu rapor oyuncularin son fiziksel olcumlerini tek tabloda toplar. Eksik alanlar sonraki olcum girislerinde tamamlanabilir.
+                            </div>
+                        </div>
+                        <h2 style="font-size:15px; margin:20px 0 10px;">Oyuncu Fiziksel Takip Tablosu</h2>
+                        <table style="width:100%; border-collapse:collapse; font-size:11px; border:1px solid #ececf2; border-radius:14px; overflow:hidden;">
+                            <thead>
+                                <tr style="background:#111217; color:#fff;">
+                                    <th style="padding:10px; text-align:left;">#</th>
+                                    <th style="padding:10px; text-align:left;">Oyuncu</th>
+                                    <th style="padding:10px; text-align:center;">Mevki</th>
+                                    <th style="padding:10px; text-align:center;">Boy</th>
+                                    <th style="padding:10px; text-align:center;">Kilo</th>
+                                    <th style="padding:10px; text-align:center;">Kulac</th>
+                                    <th style="padding:10px; text-align:center;">Ayak</th>
+                                    <th style="padding:10px; text-align:right;">Son Olcum</th>
+                                </tr>
+                            </thead>
+                            <tbody>${rows}</tbody>
+                        </table>`;
+
+                    const html = buildReportShell({
+                        eyebrow: 'Oyuncu Raporu',
+                        title: 'Takim Gelisim Raporu',
+                        subtitle: 'Kadro fiziksel takip, olcum dolulugu ve son veri ozeti.',
+                        meta: [`${players.length} oyuncu`, reportDate(new Date())],
+                        body
+                    });
+
+                    await saveReportPdfFromHtml(html, `Takim_Gelisim_Raporu_${new Date().toISOString().split('T')[0]}.pdf`);
+                    showToast('Takim raporu PDF olarak indirildi!');
+                    return;
 
                     const tempDiv = document.createElement('div');
                     tempDiv.style.cssText = 'position:fixed; left:-9999px; top:0; width:850px; background:#fff; color:#000; padding:30px; font-family:Arial, sans-serif;';
@@ -6402,7 +6606,7 @@
 
                 function formatHandoutList(text) {
                     if (!text) return '';
-                    return '<ul style="margin: 0; padding-left: 20px;">' + text.split('\n').map(l => l.trim() ? `<li style="margin-bottom: 5px;">${l}</li>` : '').join('') + '</ul>';
+                    return '<ul style="margin: 0; padding-left: 18px; line-height:1.55;">' + text.split('\n').map(l => l.trim() ? `<li style="margin-bottom: 7px;">${reportSafe(l.trim())}</li>` : '').join('') + '</ul>';
                 }
 
                 async function generateHandoutPDF(id) {
@@ -6454,15 +6658,17 @@
                         playersDiv.innerHTML = '';
                         h.players.forEach(p => {
                             playersDiv.innerHTML += `
-                            <div style="border: 2px solid #000; display: flex; min-height: 100px; page-break-inside: avoid;">
-                                <div style="flex: 0 0 100px; border-right: 2px solid #000; display: flex; align-items: center; justify-content: center;">
-                                    <span style="font-size: 60px; font-weight: 900; color: #d32f2f;">${p.number}</span>
+                            <div style="border: 1px solid #e6e6ec; border-radius: 18px; display: flex; min-height: 108px; page-break-inside: avoid; overflow:hidden; box-shadow:0 10px 24px rgba(17,18,23,0.06);">
+                                <div style="flex: 0 0 104px; background:#111217; display: flex; align-items: center; justify-content: center;">
+                                    <span style="font-size: 46px; font-weight: 950; color: #ff6b00;">${reportSafe(p.number)}</span>
                                 </div>
-                                <div style="flex: 1; padding: 10px; font-size: 14px; font-weight: 600; display: flex; flex-direction: column; justify-content: center; text-align: center;">
-                                    ${p.notes1.replace(/\n/g, '<br>')}
+                                <div style="flex: 1; padding: 14px 16px; font-size: 13px; font-weight: 700; display: flex; flex-direction: column; justify-content: center; text-align: left; line-height:1.5; border-right:1px solid #ececf2;">
+                                    <div style="font-size:10px; color:#888; font-weight:900; letter-spacing:.8px; text-transform:uppercase; margin-bottom:6px;">Güçlü Yönler</div>
+                                    ${reportSafe(p.notes1).replace(/\n/g, '<br>')}
                                 </div>
-                                <div style="flex: 1; padding: 10px; font-size: 14px; font-weight: 600; display: flex; flex-direction: column; justify-content: center; text-align: center;">
-                                    ${p.notes2.replace(/\n/g, '<br>')}
+                                <div style="flex: 1; padding: 14px 16px; font-size: 13px; font-weight: 700; display: flex; flex-direction: column; justify-content: center; text-align: left; line-height:1.5;">
+                                    <div style="font-size:10px; color:#888; font-weight:900; letter-spacing:.8px; text-transform:uppercase; margin-bottom:6px;">Zaaflar / Notlar</div>
+                                    ${reportSafe(p.notes2).replace(/\n/g, '<br>')}
                                 </div>
                             </div>
                         `;
@@ -7096,6 +7302,69 @@
                         showToast('Tüm antrenman kayıtları temizlendi.');
                         renderTrainingTracker();
                     }
+                }
+
+                async function downloadTrainingReportPDF() {
+                    const season = getCurrentSeason();
+                    const trainings = (await db.trainings.where('teamId').equals(window.activeTeamId || 1).toArray())
+                        .filter(t => t.season === season)
+                        .sort((a, b) => new Date(b.date) - new Date(a.date));
+                    if (trainings.length === 0) return showToast('Bu sezon için antrenman kaydı yok.');
+
+                    const players = await db.players.where('teamId').equals(window.activeTeamId || 1).toArray();
+                    const playerMap = new Map(players.map(p => [Number(p.id), p.name]));
+                    const atletik = trainings.filter(t => t.type === 'Atletik Performans').length;
+                    const taktik = trainings.filter(t => t.type === 'Taktik Antrenman').length;
+                    const attendanceTotal = trainings.reduce((sum, t) => sum + ((t.attendance || []).length), 0);
+                    const avgAttendance = trainings.length ? (attendanceTotal / trainings.length).toFixed(1) : '0';
+                    const rows = trainings.map((t, index) => {
+                        const attendanceNames = (t.attendance || []).map(id => playerMap.get(Number(id))).filter(Boolean);
+                        return `
+                            <tr>
+                                <td style="padding:9px 10px; border-bottom:1px solid #ececf2; color:#777; font-weight:800;">${index + 1}</td>
+                                <td style="padding:9px 10px; border-bottom:1px solid #ececf2; font-weight:900;">${reportDate(t.date)}</td>
+                                <td style="padding:9px 10px; border-bottom:1px solid #ececf2;">${reportSafe(t.type)}</td>
+                                <td style="padding:9px 10px; border-bottom:1px solid #ececf2;">${reportSafe(t.note || '-')}</td>
+                                <td style="padding:9px 10px; border-bottom:1px solid #ececf2; text-align:right;">${attendanceNames.length} oyuncu</td>
+                            </tr>`;
+                    }).join('');
+
+                    const body = `
+                        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:18px;">
+                            ${reportMetric('Toplam', trainings.length, '#ff6b00')}
+                            ${reportMetric('Atletik', atletik, '#1f9d63')}
+                            ${reportMetric('Taktik', taktik, '#2d98da')}
+                            ${reportMetric('Ort. Katilim', avgAttendance, '#111217')}
+                        </div>
+                        <div style="border:1px solid #ececf2; border-radius:16px; padding:16px; background:#fafafa; margin-bottom:18px;">
+                            <div style="font-size:13px; line-height:1.55; color:#555;">
+                                Sezon boyunca kaydedilen antrenmanlar, tür dağılımı ve oyuncu katılım özeti.
+                            </div>
+                        </div>
+                        <h2 style="font-size:15px; margin:20px 0 10px;">Antrenman Kayitlari</h2>
+                        <table style="width:100%; border-collapse:collapse; font-size:11px; border:1px solid #ececf2; border-radius:14px; overflow:hidden;">
+                            <thead>
+                                <tr style="background:#111217; color:#fff;">
+                                    <th style="padding:10px; text-align:left;">#</th>
+                                    <th style="padding:10px; text-align:left;">Tarih</th>
+                                    <th style="padding:10px; text-align:left;">Tur</th>
+                                    <th style="padding:10px; text-align:left;">Not</th>
+                                    <th style="padding:10px; text-align:right;">Katilim</th>
+                                </tr>
+                            </thead>
+                            <tbody>${rows}</tbody>
+                        </table>`;
+
+                    const html = buildReportShell({
+                        eyebrow: 'Antrenman Raporu',
+                        title: `${season} Sezon Antrenman Ozeti`,
+                        subtitle: 'Antrenman türleri, katilim ve son kayitlar.',
+                        meta: [season, `${trainings.length} antrenman`, `${players.length} oyuncu`],
+                        body
+                    });
+
+                    await saveReportPdfFromHtml(html, `Antrenman_Raporu_${season}.pdf`);
+                    showToast('Antrenman raporu PDF olarak indirildi!');
                 }
 
                 async function renderTrainingTracker() {
