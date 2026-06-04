@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 
 <head>
@@ -10,7 +10,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#0f0f13">
     <meta name="description" content="Clutch - Basketbol Antrenör Yönetim Sistemi. Taktik tahtası, playbook, oyuncu takibi ve maç istatistikleri.">
-    <link href="https://fonts.googleapis.com/css2family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Outfit:wght@400;600;700;800;900&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Outfit:wght@400;600;700;800;900&display=swap"
         rel="stylesheet">
     <link rel="apple-touch-icon" href="logo.png">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -19,39 +19,34 @@
     <style>
         #login-screen {
             background:
-                radial-gradient(circle at 18% 18%, rgba(255, 122, 24, 0.26), transparent 30%),
-                radial-gradient(circle at 82% 10%, rgba(255, 189, 89, 0.15), transparent 31%),
-                radial-gradient(circle at 50% 50%, rgba(255, 107, 0, 0.08), transparent 42%),
-                linear-gradient(135deg, #080405 0%, #160a06 34%, #09080e 68%, #050507 100%) !important;
+                radial-gradient(circle at 18% 18%, rgba(255, 122, 24, 0.24), transparent 28%),
+                radial-gradient(circle at 82% 10%, rgba(255, 189, 89, 0.16), transparent 30%),
+                linear-gradient(135deg, #050507 0%, #111015 48%, #050507 100%);
         }
 
         #login-screen::before {
             background:
-                linear-gradient(115deg, transparent 0 42%, rgba(255, 107, 0, 0.13) 43%, transparent 44% 100%),
-                repeating-linear-gradient(90deg, rgba(255,255,255,0.028) 0 1px, transparent 1px 92px),
-                repeating-linear-gradient(0deg, rgba(255,107,0,0.035) 0 1px, transparent 1px 92px) !important;
+                linear-gradient(115deg, transparent 0 42%, rgba(255, 107, 0, 0.12) 43%, transparent 44% 100%),
+                repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 92px),
+                repeating-linear-gradient(0deg, rgba(255,107,0,0.035) 0 1px, transparent 1px 92px);
             width: 100%;
             height: 100%;
             top: 0;
             left: 0;
-            opacity: 0.72 !important;
             animation: loginGridDrift 16s linear infinite;
         }
 
         #login-screen::after {
-            content: "";
-            pointer-events: none;
-            background-image:
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Cg fill='none' stroke='%23ff6b00' stroke-width='2.4' opacity='.26'%3E%3Crect x='70' y='70' width='1460' height='760' rx='34'/%3E%3Cpath d='M800 70v760'/%3E%3Ccircle cx='800' cy='450' r='98'/%3E%3Ccircle cx='800' cy='450' r='10' opacity='.75'/%3E%3Cpath d='M70 250h185v400H70M1530 250h-185v400h185'/%3E%3Cpath d='M70 318h82v264H70M1530 318h-82v264h82'/%3E%3Cpath d='M255 315a214 214 0 0 1 0 270M1345 315a214 214 0 0 0 0 270'/%3E%3Cpath d='M70 155a315 315 0 0 1 0 590M1530 155a315 315 0 0 0 0 590'/%3E%3Cpath d='M70 90h1460M70 810h1460' opacity='.35'/%3E%3C/g%3E%3Cg fill='none' stroke='%23ffb347' stroke-width='1.2' opacity='.16'%3E%3Cpath d='M160 70v760M1440 70v760M70 450h1460'/%3E%3Ccircle cx='800' cy='450' r='178'/%3E%3C/g%3E%3C/svg%3E"),
-                radial-gradient(circle at center, transparent 0 16%, rgba(255,107,0,0.11) 16.3% 16.8%, transparent 17.2%),
-                linear-gradient(90deg, transparent 0 49.75%, rgba(255,179,71,0.10) 49.9% 50.1%, transparent 50.25%);
-            background-size: min(1500px, 94vw) auto, 760px 760px, 100% 100%;
-            background-position: center, center, center;
-            background-repeat: no-repeat, no-repeat, no-repeat;
-            opacity: 1 !important;
-            filter: drop-shadow(0 0 18px rgba(255, 107, 0, 0.18));
-            mask-image: radial-gradient(ellipse at center, black 6%, rgba(0,0,0,0.86) 48%, transparent 86%);
-            -webkit-mask-image: radial-gradient(ellipse at center, black 6%, rgba(0,0,0,0.86) 48%, transparent 86%);
+            background:
+                radial-gradient(circle at center, transparent 0 15%, rgba(255,107,0,0.09) 15.3% 15.8%, transparent 16.1%),
+                linear-gradient(90deg, transparent 0 49.7%, rgba(255,255,255,0.08) 49.9% 50.1%, transparent 50.3%),
+                linear-gradient(rgba(255,107,0,0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,107,0,0.035) 1px, transparent 1px);
+            background-size: 760px 760px, 100% 100%, 72px 72px, 72px 72px;
+            background-position: center, center, center, center;
+            opacity: 0.9;
+            mask-image: radial-gradient(ellipse at center, black 10%, transparent 72%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 10%, transparent 72%);
         }
 
         .login-container {
@@ -249,6 +244,85 @@
             .login-court-map { inset: 18% 4% 0; }
             .login-box { width: 100%; }
         }
+        #pro-video .va-tools-panel {
+            background: rgba(28, 30, 36, 0.88) !important;
+            border: 1px solid rgba(255, 255, 255, 0.10) !important;
+            border-radius: 16px !important;
+            padding: 14px !important;
+            gap: 12px !important;
+            box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28) !important;
+            scrollbar-width: thin;
+        }
+
+        #pro-video .va-panel-title {
+            margin: 8px 0 2px !important;
+            color: rgba(255, 255, 255, 0.62) !important;
+            font-size: 10px !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.8px !important;
+            text-transform: uppercase !important;
+        }
+
+        #pro-video .va-tools-grid {
+            display: grid !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 8px !important;
+        }
+
+        #pro-video .va-tool-btn {
+            min-height: 40px !important;
+            padding: 9px 10px !important;
+            border-radius: 10px !important;
+            background: rgba(255, 255, 255, 0.055) !important;
+            border: 1px solid rgba(255, 255, 255, 0.10) !important;
+            color: rgba(255, 255, 255, 0.82) !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            line-height: 1.2 !important;
+            box-shadow: none !important;
+        }
+
+        #pro-video .va-tool-btn:hover {
+            background: rgba(255, 255, 255, 0.09) !important;
+            border-color: rgba(255, 255, 255, 0.18) !important;
+        }
+
+        #pro-video .va-tool-btn.active {
+            background: rgba(255, 107, 0, 0.16) !important;
+            border-color: rgba(255, 107, 0, 0.55) !important;
+            color: #fff !important;
+        }
+
+        #pro-video .va-color-grid {
+            display: grid !important;
+            grid-template-columns: repeat(8, 1fr) !important;
+            gap: 7px !important;
+        }
+
+        #pro-video .va-color-box {
+            width: 100% !important;
+            aspect-ratio: 1 !important;
+            border-radius: 999px !important;
+            border: 2px solid rgba(255, 255, 255, 0.16) !important;
+            cursor: pointer;
+        }
+
+        #pro-video .va-color-box.active {
+            outline: 2px solid #fff !important;
+            outline-offset: 2px !important;
+        }
+
+        #pro-video .va-custom-color-picker {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 10px !important;
+            min-height: 36px !important;
+            padding: 8px 10px !important;
+            border-radius: 10px !important;
+            background: rgba(255, 255, 255, 0.045) !important;
+            border: 1px solid rgba(255, 255, 255, 0.09) !important;
+        }
     </style>
   <script type="module" crossorigin src="./assets/index.js"></script>
   <link rel="stylesheet" crossorigin href="./assets/index.css">
@@ -331,20 +405,6 @@
                 <img src="logo.png" alt="Clutch Logo" class="app-logo-large">
                 <h1>CLUTCH</h1>
                 <p>Koç kontrol merkezi. Parkeye çıkmadan önce oyunu burada kur.</p>
-                <div style="margin: -18px 0 24px; padding: 12px; border: 1px solid rgba(255,255,255,0.10); border-radius: 12px; background: rgba(255,255,255,0.055);">
-                    <div style="color: var(--primary-orange); font-size: 11px; font-weight: 900; letter-spacing: 1.6px; text-transform: uppercase; margin-bottom: 9px;">Takip et</div>
-                    <div style="display: grid; gap: 7px;">
-                        <a href="https://www.instagram.com/statdata_/" target="_blank" rel="noopener noreferrer" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; color: #fff; text-decoration: none; background: rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.08); border-radius: 9px; padding: 8px 10px; font-size: 12px; font-weight: 800;">
-                            <span>StatData</span><span style="color: #ffb347;">Instagram</span>
-                        </a>
-                        <a href="https://www.instagram.com/firststeplab_/" target="_blank" rel="noopener noreferrer" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; color: #fff; text-decoration: none; background: rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.08); border-radius: 9px; padding: 8px 10px; font-size: 12px; font-weight: 800;">
-                            <span>FirstStep Lab</span><span style="color: #ffb347;">Instagram</span>
-                        </a>
-                        <a href="https://www.instagram.com/tahiremre_/" target="_blank" rel="noopener noreferrer" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; color: #fff; text-decoration: none; background: rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.08); border-radius: 9px; padding: 8px 10px; font-size: 12px; font-weight: 800;">
-                            <span>Tahir Emre</span><span style="color: #ffb347;">Geliştirici / Antrenör</span>
-                        </a>
-                    </div>
-                </div>
 
                 <div class="auth-tabs">
                     <button class="auth-tab active" onclick="switchAuthTab('login')">Giriş Yap</button>
@@ -391,7 +451,7 @@
                     </div>
                     <button class="btn-login" onclick="doRegister()">KAYIT OL</button>
                     <div class="login-links">
-                        <a onclick="switchAuthTab('login')">Zaten hesabım var Giriş Yap</a>
+                        <a onclick="switchAuthTab('login')">Zaten hesabım var? Giriş Yap</a>
                     </div>
                 </div>
 
@@ -937,7 +997,7 @@
                             📌 GÜNÜN ODAK NOKTASI
                         </h4>
                         <textarea id="coachDailyNote"
-                            placeholder="Bugün sahada neye odaklanacağız (Örn: Geçiş savunması, yardımlaşma...)"
+                            placeholder="Bugün sahada neye odaklanacağız? (Örn: Geçiş savunması, yardımlaşma...)"
                             style="width: 100%; height: 90px; background: rgba(0,0,0,0.3); border: 1px dashed #444; border-radius: 12px; color: #fcfcfc; padding: 15px; font-size: 14px; line-height: 1.6; outline: none; resize: none; transition: 0.3s;"
                             oninput="saveCoachNote(this.value)"></textarea>
                         <div id="saveStatus"
@@ -1103,7 +1163,7 @@
                         </main>
 
                         <aside class="tactical-tools-panel">
-                            <h3>Aksiyon Ekle <span></span></h3>
+                            <h3>Aksiyon Ekle <span>?</span></h3>
                             <div class="tool-grid actions">
                                 <button class="tool-btn active-tool" onclick="setDrawType('dribble', this)">〰 Dribble</button>
                                 <button class="tool-btn" onclick="setDrawType('pass', this)">⤏ Pas</button>
@@ -1113,18 +1173,18 @@
                                 <button class="tool-btn" onclick="setDrawType('handoff', this)">Ⅱ Handoff</button>
                             </div>
 
-                            <h3>Oyuncu Ekle <span></span></h3>
+                            <h3>Oyuncu Ekle <span>?</span></h3>
                             <div class="player-row offense">
-                                <button onclick="addPiece('1','offense')">1</button><button onclick="addPiece('2','offense')">2</button><button onclick="addPiece('3','offense')">3</button><button onclick="addPiece('4','offense')">4</button><button onclick="addPiece('5','offense')">5</button><button onclick="addPiece('','offense')"></button>
+                                <button onclick="addPiece('1','offense')">1</button><button onclick="addPiece('2','offense')">2</button><button onclick="addPiece('3','offense')">3</button><button onclick="addPiece('4','offense')">4</button><button onclick="addPiece('5','offense')">5</button><button onclick="addPiece('?','offense')">?</button>
                             </div>
                             <div class="player-row light">
-                                <button onclick="addPiece('X1','defense')">X1</button><button onclick="addPiece('X2','defense')">X2</button><button onclick="addPiece('X3','defense')">X3</button><button onclick="addPiece('X4','defense')">X4</button><button onclick="addPiece('X5','defense')">X5</button><button onclick="addPiece('X','defense')">X</button>
+                                <button onclick="addPiece('X1','defense')">X1</button><button onclick="addPiece('X2','defense')">X2</button><button onclick="addPiece('X3','defense')">X3</button><button onclick="addPiece('X4','defense')">X4</button><button onclick="addPiece('X5','defense')">X5</button><button onclick="addPiece('X?','defense')">X?</button>
                             </div>
                             <div class="player-row neutral">
                                 <button onclick="addPiece('①','offense')">①</button><button onclick="addPiece('②','offense')">②</button><button onclick="addPiece('③','offense')">③</button><button onclick="addPiece('④','offense')">④</button><button onclick="addPiece('⑤','offense')">⑤</button>
                             </div>
 
-                            <h3>Ek Araçlar <span></span></h3>
+                            <h3>Ek Araçlar <span>?</span></h3>
                             <div class="tool-grid misc">
                                 <button class="tool-btn" onclick="setDrawType('select', this)">↕</button>
                                 <button onclick="addPiece('🔺','cone')">🔺</button>
@@ -1334,21 +1394,11 @@
                                     style="font-family:monospace; color:#666; font-size:13px; min-width:45px; text-align:right;">0:00</span>
                             </div>
 
-                            <!-- MAIN VIDEO TRACK -->
-                            <div style="display:flex; align-items:center; gap:0; margin-bottom:6px;">
-                                <div
-                                    style="width:110px; flex-shrink:0; color:#ffb347; font-size:11px; font-weight:bold; text-transform:uppercase; letter-spacing:0.5px;">
-                                    Ana Video</div>
-                                <div id="track-main-video"
-                                    style="flex:1; height:32px; background:#0a0a0c; border-radius:4px; position:relative; overflow:hidden; border:1px solid rgba(255,179,71,0.24);">
-                                </div>
-                            </div>
-
-                            <!-- DRAWING TRACK -->
+                            <!-- ÇİZİM TRACK -->
                             <div style="display:flex; align-items:center; gap:0; margin-bottom:6px;">
                                 <div
                                     style="width:110px; flex-shrink:0; color:#888; font-size:11px; font-weight:bold; text-transform:uppercase; letter-spacing:0.5px;">
-                                    Cizimler</div>
+                                    ✏️ Çizimler</div>
                                 <div id="track-drawings"
                                     style="flex:1; height:28px; background:#0a0a0c; border-radius:4px; position:relative; overflow:hidden; border:1px solid #222;">
                                 </div>
@@ -1418,79 +1468,63 @@
                             style="display: none;" onchange="loadProVideo(event)">
                         <button class="btn primary"
                             style="width: 100%; font-size: 14px; padding: 14px; box-shadow: 0 5px 15px rgba(255, 107, 0, 0.2);"
-                            onclick="document.getElementById('proUpload').click()">📥 Video Yükle</button>
+                            onclick="document.getElementById('proUpload').click()">Video Yükle</button>
 
-                        <h4 class="va-panel-title">🎬 KONTROL</h4>
+                        <h4 class="va-panel-title">Kontrol</h4>
                         <div class="va-tools-grid">
                             <button class="va-tool-btn" onclick="freezeFrame()"
-                                style="color:#00d4ff; grid-column: span 2; font-size:13px; padding:10px;">❄️ FREEZE
-                                FRAME</button>
-                            <button class="va-tool-btn" onclick="stepFrame(-1)" style="color:#aaa;">⏪ -1 Kare</button>
-                            <button class="va-tool-btn" onclick="stepFrame(1)" style="color:#aaa;">⏩ +1 Kare</button>
-                            <button class="va-tool-btn" onclick="restartSequentialAnimations()" style="color:#ffb347;">▶️ Animasyonları Oynat</button>
-                            <button class="va-tool-btn" onclick="deleteSelectedTimelineItem()" style="color:#ff4757;">🗑️ Seçileni Sil</button>
+                                style="color:#00d4ff; grid-column: span 2; font-size:13px; padding:10px;">Freeze</button>
+                            <button class="va-tool-btn" onclick="stepFrame(-1)" style="color:#aaa;">-1 Kare</button>
+                            <button class="va-tool-btn" onclick="stepFrame(1)" style="color:#aaa;">+1 Kare</button>
+                            <button class="va-tool-btn" onclick="restartSequentialAnimations()" style="color:#ffb347;">Animasyon</button>
+                            <button class="va-tool-btn" onclick="deleteSelectedTimelineItem()" style="color:#ff4757;">Seçileni Sil</button>
                         </div>
 
-                        <h4 class="va-panel-title">✏️ ÇİZİM ARAÇLARI</h4>
+                        <h4 class="va-panel-title">Çizim</h4>
                         <div class="va-tools-grid">
-                            <button class="va-tool-btn active" onclick="setProTool('select', this)">🖱️ Seçim</button>
-                            <button class="va-tool-btn" onclick="setProTool('pen', this)">✏️ Kalem</button>
-                            <button class="va-tool-btn" onclick="setProTool('line', this)">➖ Çizgi</button>
-                            <button class="va-tool-btn" onclick="setProTool('arrow', this)">➔ Ok</button>
-                            <button class="va-tool-btn" onclick="setProTool('dashedLine', this)">⤏ Kesik Çizgi</button>
-                            <button class="va-tool-btn" onclick="setProTool('wavyLine', this)">〰 Dalga</button>
+                            <button class="va-tool-btn active" onclick="setProTool('select', this)">Seçim</button>
+                            <button class="va-tool-btn" onclick="setProTool('pen', this)">Kalem</button>
+                            <button class="va-tool-btn" onclick="setProTool('line', this)">Çizgi</button>
+                            <button class="va-tool-btn" onclick="setProTool('arrow', this)">Ok</button>
+                            <button class="va-tool-btn" onclick="setProTool('dashedLine', this)">Kesik Çizgi</button>
+                            <button class="va-tool-btn" onclick="setProTool('wavyLine', this)">Dalga</button>
                         </div>
 
-                        <h4 class="va-panel-title">⭕ ŞEKİLLER</h4>
+                        <h4 class="va-panel-title">Şekiller</h4>
                         <div class="va-tools-grid">
-                            <button class="va-tool-btn" onclick="setProTool('circle', this)">⭕ Daire</button>
-                            <button class="va-tool-btn" onclick="setProTool('filledCircle', this)">🔴 Dolu
-                                Daire</button>
-                            <button class="va-tool-btn" onclick="setProTool('rect', this)">🔲 Kare</button>
-                            <button class="va-tool-btn" onclick="setProTool('filledRect', this)">⬛ Dolu Kare</button>
-                            <button class="va-tool-btn" onclick="setProTool('triangle', this)">🔺 Üçgen</button>
-                            <button class="va-tool-btn" onclick="setProTool('text', this)">🅰️ Metin</button>
+                            <button class="va-tool-btn" onclick="setProTool('circle', this)">Daire</button>
+                            <button class="va-tool-btn" onclick="setProTool('rect', this)">Kare</button>
+                            <button class="va-tool-btn" onclick="setProTool('triangle', this)">Üçgen</button>
+                            <button class="va-tool-btn" onclick="setProTool('text', this)">Metin</button>
                         </div>
 
-                        <h4 class="va-panel-title">🏀 BASKETBOL ARAÇLARI</h4>
+                        <h4 class="va-panel-title">Basketbol</h4>
                         <div class="va-tools-grid">
                             <button class="va-tool-btn" onclick="setProTool('playerCircle', this)"
-                                style="color:#45aaf2;">👤 Oyuncu İşaretle</button>
+                                style="color:#45aaf2;">Oyuncu</button>
                             <button class="va-tool-btn" onclick="setProTool('routeSimulator', this)"
-                                style="color:#ff8a22;">🧩 Rota Simülatörü</button>
+                                style="color:#ff8a22;">Rota</button>
                             <button class="va-tool-btn" onclick="setProTool('movementPath', this)"
-                                style="color:#2ecc71;">🏃 Hareket Yolu</button>
-                            <button class="va-tool-btn" onclick="setProTool('passLine', this)" style="color:#fff;">⤏ Pas
-                                Çizgisi</button>
+                                style="color:#2ecc71;">Hareket Yolu</button>
+                            <button class="va-tool-btn" onclick="setProTool('passLine', this)" style="color:#fff;">Pas Çizgisi</button>
                             <button class="va-tool-btn" onclick="setProTool('screenMark', this)"
-                                style="color:#e74c3c;">⊤ Perde</button>
-                            <button class="va-tool-btn" onclick="setProTool('shotMark', this)" style="color:#2ecc71;">🎯
-                                Şut Noktası</button>
-                            <button class="va-tool-btn" onclick="setProTool('zoneMark', this)" style="color:#f39c12;">📐
-                                Alan İşaretle</button>
+                                style="color:#e74c3c;">Perde</button>
+                            <button class="va-tool-btn" onclick="setProTool('shotMark', this)" style="color:#2ecc71;">Şut Noktası</button>
                             <button class="va-tool-btn" onclick="setProTool('areaPerspective', this)"
-                                style="color:#f1c40f; grid-column: span 2;">▱ Perspektif Alan (X/Y/Z)</button>
+                                style="color:#f1c40f; grid-column: span 2;">Perspektif Alan</button>
                         </div>
 
-                        <h4 class="va-panel-title">💡 EFEKTLER</h4>
+                        <h4 class="va-panel-title">Odak</h4>
                         <div class="va-tools-grid">
                             <button class="va-tool-btn" onclick="setProTool('spotlight', this)"
-                                style="color: #ffffff;">💡 Üst Spot</button>
+                                style="color: #ffffff;">Üst Spot</button>
                             <button class="va-tool-btn" onclick="setProTool('tubeSpotlight', this)"
-                                style="color: #ffb347;">🔦 Tüp Spot</button>
-                            <button class="va-tool-btn" onclick="setProTool('glow', this)" style="color: #e74c3c;">🔥
-                                Glow</button>
-                            <button class="va-tool-btn" onclick="setProTool('blur', this)" style="color: #95a5a6;">🌫️
-                                Blur Alan</button>
+                                style="color: #ffb347;">Tüp Spot</button>
                             <button class="va-tool-btn" onclick="setProTool('zoomLens', this)"
-                                style="color: var(--info);">🔍 Büyüteç</button>
-                            <button class="va-tool-btn" onclick="setProTool('dimArea', this)" style="color: #7f8c8d;">🌑
-                                Karart</button>
-                            <button class="va-tool-btn" onclick="setProTool('highlight', this)"
-                                style="color: #f39c12;">🖍️ Fosforlu</button>
+                                style="color: var(--info);">Büyüteç</button>
                         </div>
 
-                        <h4 class="va-panel-title">🎨 RENK PALETİ</h4>
+                        <h4 class="va-panel-title">Renk</h4>
                         <div class="va-color-grid">
                             <div class="va-color-box active" style="background: #ff4757;"
                                 onclick="setProColor('#ff4757', this)"></div>
@@ -1514,21 +1548,13 @@
                             <input type="color" id="proColorPicker" value="#ff4757" onchange="setProColor(this.value)">
                         </label>
 
-                        <h4 class="va-panel-title">📏 ÇİZGİ ÇAPI</h4>
+                        <h4 class="va-panel-title">Çizgi Kalınlığı</h4>
                         <div>
                             <label
                                 style="font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between;"><span>Değer:</span>
                                 <span id="proThickVal" style="color: #fff; font-weight: bold;">4px</span></label>
                             <input type="range" id="proThick" min="2" max="25" value="4" onchange="updateProThick()"
                                 style="width: 100%; margin-top: 8px;">
-                        </div>
-                        <h4 class="va-panel-title">↔️ SEÇİLİ ARACI BOYUTLANDIR</h4>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                            <button class="btn" style="padding: 9px; font-size: 12px;" onclick="resizeSelectedProSegment(0.88)">− Küçült</button>
-                            <button class="btn" style="padding: 9px; font-size: 12px;" onclick="resizeSelectedProSegment(1.14)">+ Büyüt</button>
-                        </div>
-                        <div style="font-size: 10px; color: var(--text-muted); line-height: 1.5;">
-                            Seçim aracını açıp çizime tıklayın. Kısayol: <b>+</b> / <b>-</b>
                         </div>
 
                         <div style="display: flex; gap: 8px; margin-top: 10px;">
@@ -1554,8 +1580,8 @@
                     <div class="export-option-group">
                         <label>Bitrate</label>
                         <div class="export-choice-row" data-export-group="bitrate">
-                            <button type="button" class="export-choice active" data-value="minimum" onclick="selectExportChoice('bitrate', 'minimum', this)">Minimum</button>
-                            <button type="button" class="export-choice" data-value="recommended" onclick="selectExportChoice('bitrate', 'recommended', this)">Onerilen</button>
+                            <button type="button" class="export-choice" data-value="minimum" onclick="selectExportChoice('bitrate', 'minimum', this)">Minimum</button>
+                            <button type="button" class="export-choice active" data-value="recommended" onclick="selectExportChoice('bitrate', 'recommended', this)">Onerilen</button>
                             <button type="button" class="export-choice" data-value="high" onclick="selectExportChoice('bitrate', 'high', this)">Yuksek</button>
                         </div>
                     </div>
@@ -1563,8 +1589,8 @@
                     <div class="export-option-group">
                         <label>Kalite</label>
                         <div class="export-choice-row" data-export-group="resolution">
-                            <button type="button" class="export-choice active" data-value="720" onclick="selectExportChoice('resolution', '720', this)">720p</button>
-                            <button type="button" class="export-choice" data-value="1080" onclick="selectExportChoice('resolution', '1080', this)">1080p</button>
+                            <button type="button" class="export-choice" data-value="720" onclick="selectExportChoice('resolution', '720', this)">720p</button>
+                            <button type="button" class="export-choice active" data-value="1080" onclick="selectExportChoice('resolution', '1080', this)">1080p</button>
                         </div>
                     </div>
 
@@ -1572,9 +1598,9 @@
                         <label>FPS</label>
                         <div class="export-choice-row" data-export-group="fps">
                             <button type="button" class="export-choice" data-value="20" onclick="selectExportChoice('fps', '20', this)">20 fps</button>
-                            <button type="button" class="export-choice active" data-value="30" onclick="selectExportChoice('fps', '30', this)">30 fps</button>
+                            <button type="button" class="export-choice" data-value="30" onclick="selectExportChoice('fps', '30', this)">30 fps</button>
                             <button type="button" class="export-choice" data-value="59" onclick="selectExportChoice('fps', '59', this)">59 fps</button>
-                            <button type="button" class="export-choice" data-value="60" onclick="selectExportChoice('fps', '60', this)">60 fps</button>
+                            <button type="button" class="export-choice active" data-value="60" onclick="selectExportChoice('fps', '60', this)">60 fps</button>
                         </div>
                     </div>
 
@@ -2434,7 +2460,7 @@
 
             // Takvimden etkinlik silme fonksiyonu
             async function deleteEvent(id) {
-                if (confirm("Bu etkinliği takvimden silmek istediğinize emin misiniz")) {
+                if (confirm("Bu etkinliği takvimden silmek istediğinize emin misiniz?")) {
                     try {
                         await db.events.delete(Number(id));
                         showToast("Etkinlik takvimden başarıyla silindi.");
@@ -2602,7 +2628,7 @@
 
                     try {
                         // manifest.json'u cache'den kaçınmak için timestamp ile çek
-                        const res = await fetch('/videos/manifest.jsont=' + Date.now());
+                        const res = await fetch('/videos/manifest.json?t=' + Date.now());
                         if (!res.ok) throw new Error('manifest.json bulunamadı (HTTP ' + res.status + ')');
 
                         const videos = await res.json();
@@ -2663,7 +2689,7 @@
                 }
 
                 async function deletePlaybookItem(id) {
-                    if (confirm('Bu videoyu silmek istiyor musunuz')) {
+                    if (confirm('Bu videoyu silmek istiyor musunuz?')) {
                         // Silinen videonun blob URL'ini temizle
                         if (window._playbookBlobUrls.has(id)) {
                             URL.revokeObjectURL(window._playbookBlobUrls.get(id));
@@ -2683,10 +2709,10 @@
                     const name = document.getElementById('newPlayerName').value;
                     const pos = document.getElementById('newPlayerPos').value;
                     const hand = document.getElementById('newPlayerHand').value;
-                    const h = document.getElementById('pHeight').value || "-";
-                    const w = document.getElementById('pWeight').value || "-";
-                    const ws = document.getElementById('pWingspan').value || "-";
-                    const ss = document.getElementById('pShoe').value || "-";
+                    const h = document.getElementById('pHeight')?.value || "-";
+                    const w = document.getElementById('pWeight')?.value || "-";
+                    const ws = document.getElementById('pWingspan')?.value || "-";
+                    const ss = document.getElementById('pShoe')?.value || "-";
 
                     if (!name) return showToast('Lütfen oyuncu adı giriniz!');
 
@@ -2766,7 +2792,7 @@
 
                 // 3. SİLME FONKSİYONU
                 async function deletePlayer(id) {
-                    if (confirm("Bu oyuncuyu takımdan silmek istediğinize emin misiniz")) {
+                    if (confirm("Bu oyuncuyu takımdan silmek istediğinize emin misiniz?")) {
                         await db.players.delete(Number(id));
                         renderScoutPage();
                     }
@@ -3065,8 +3091,8 @@
 
                     try {
                         let allMatches = await db.matches.where('teamId').equals(window.activeTeamId || 1).toArray();
-                        const filterGen = document.getElementById('matchFilterGen').value || 'Tümü';
-                        const filterGender = document.getElementById('matchFilterGender').value || 'Tümü';
+                        const filterGen = document.getElementById('matchFilterGen')?.value || 'Tümü';
+                        const filterGender = document.getElementById('matchFilterGender')?.value || 'Tümü';
 
                         if (filterGen !== 'Tümü') allMatches = allMatches.filter(m => m.generation === filterGen);
                         if (filterGender !== 'Tümü') allMatches = allMatches.filter(m => m.gender === filterGender);
@@ -3145,7 +3171,7 @@
                             let html = '<div style="display:flex; flex-direction:column; gap:8px;">';
                             scorerArr.slice(0, 10).forEach((s, i) => {
                                 const pct = Math.round((s.total / maxPts) * 100);
-                            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `<span style="color:#555; font-size:12px; width:20px; display:inline-block; text-align:center;">${i + 1}</span>`;
+                                const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `<span style="color:#555; font-size:12px; width:20px; display:inline-block; text-align:center;">${i + 1}</span>`;
                                 html += `<div style="display:flex; align-items:center; gap:10px;">
                                 <span style="min-width:24px; text-align:center;">${medal}</span>
                                 <span style="min-width:120px; font-size:13px; color:#ddd; font-weight:600;">${s.name}</span>
@@ -3273,7 +3299,7 @@
                 }
 
                 async function deleteMatch(id) {
-                    if (confirm('Bu maçı silmek istediğinize emin misiniz')) {
+                    if (confirm('Bu maçı silmek istediğinize emin misiniz?')) {
                         await db.matches.delete(Number(id));
                         if (typeof showToast === 'function') showToast('Maç kayıtları silindi.');
                         renderMatches();
@@ -3492,7 +3518,7 @@
                 }
 
                 async function deletePdfLibraryItem(id) {
-                    if (confirm('Bu dosyayı arşivden silmek istediğine emin misin')) {
+                    if (confirm('Bu dosyayı arşivden silmek istediğine emin misin?')) {
                         await db.pdfLibrary.delete(id);
                         if (typeof showToast === 'function') showToast('Dosya silindi.');
                         renderPdfLibrary();
@@ -3523,54 +3549,22 @@
                 let proLastY = 0;
                 let proAreaMode = 'x';
                 let selectedTimelineItem = null;
-                let proMainVideoClip = null;
                 let activePlaybackFreeze = null;
                 let proAnnotationAnimFrame = null;
                 let proAnimationScale = 1;
                 let activePlaybackFreezeElapsed = 0;
                 let proPlaybackRenderFrame = null;
-                let proTimelineHoldTime = null;
-                let proTimelineHoldUntil = 0;
-                let proTimelineRulerSignature = '';
-                const proPlayheadCache = {};
-                const proImageDataCanvasCache = new WeakMap();
-                let proLastAnnotationSignature = '';
-                let proLastPlaybackRenderAt = 0;
-                const PRO_PLAYBACK_RENDER_INTERVAL_MS = 33;
-                const proTimelineUiCache = { pct: null, time: '', duration: '' };
-
-                function getClipStart() {
-                    return Math.max(0, proMainVideoClip ? Number(proMainVideoClip.start) || 0 : 0);
-                }
-
-                function getClipEnd() {
-                    const fullDuration = proVideo && proVideo.duration ? proVideo.duration : 0;
-                    const fallbackEnd = fullDuration || getClipStart();
-                    return Math.max(getClipStart(), Math.min(fullDuration || fallbackEnd, proMainVideoClip ? Number(proMainVideoClip.end) || fallbackEnd : fallbackEnd));
-                }
-
-                function getBaseVideoDuration() {
-                    return Math.max(0, getClipEnd() - getClipStart());
-                }
-
-                function isVideoTimeInClip(time) {
-                    return time >= getClipStart() - 0.001 && time <= getClipEnd() + 0.001;
-                }
 
                 function getFreezeExtraDuration() {
-                    return (proFreezes || [])
-                        .filter(f => isVideoTimeInClip(Number(f.time) || 0))
-                        .reduce((sum, f) => sum + (Number(f.duration) || 0), 0);
+                    return (proFreezes || []).reduce((sum, f) => sum + (Number(f.duration) || 0), 0);
                 }
 
                 function getVirtualDuration() {
-                    return Math.max(0, getBaseVideoDuration() + getFreezeExtraDuration());
+                    return Math.max(0, (proVideo && proVideo.duration ? proVideo.duration : 0) + getFreezeExtraDuration());
                 }
 
                 function getSortedFreezes() {
-                    return [...(proFreezes || [])]
-                        .filter(f => isVideoTimeInClip(Number(f.time) || 0))
-                        .sort((a, b) => ((a.time || 0) - (b.time || 0)) || String(a.id || '').localeCompare(String(b.id || '')));
+                    return [...(proFreezes || [])].sort((a, b) => (a.time || 0) - (b.time || 0));
                 }
 
                 function getFreezeTimelineStart(freeze) {
@@ -3580,33 +3574,32 @@
                         if (String(f.id) === String(freeze.id)) break;
                         if ((f.time || 0) <= (freeze.time || 0)) extra += Number(f.duration) || 0;
                     }
-                    return Math.max(0, (freeze.time || 0) - getClipStart()) + extra;
+                    return (freeze.time || 0) + extra;
                 }
 
                 function videoToTimelineTime(videoTime) {
-                    const clippedVideoTime = Math.max(getClipStart(), Math.min(getClipEnd(), Number(videoTime) || 0));
                     let extra = 0;
                     for (const f of getSortedFreezes()) {
-                        if ((f.time || 0) < clippedVideoTime - 0.001) extra += Number(f.duration) || 0;
+                        if ((f.time || 0) <= videoTime) extra += Number(f.duration) || 0;
                     }
-                    return Math.max(0, clippedVideoTime - getClipStart()) + extra;
+                    return videoTime + extra;
                 }
 
                 function timelineToVideoTime(timelineTime) {
                     let extra = 0;
                     for (const f of getSortedFreezes()) {
-                        const start = Math.max(0, (f.time || 0) - getClipStart()) + extra;
+                        const start = (f.time || 0) + extra;
                         const end = start + (Number(f.duration) || 0);
-                        if (timelineTime >= start && timelineTime < end - 0.001) return f.time || 0;
+                        if (timelineTime >= start && timelineTime <= end) return f.time || 0;
                         if (timelineTime > end) extra += Number(f.duration) || 0;
                     }
-                    return Math.max(getClipStart(), Math.min(getClipEnd(), getClipStart() + timelineTime - extra));
+                    return Math.max(0, Math.min(proVideo && proVideo.duration ? proVideo.duration : 0, timelineTime - extra));
                 }
 
                 function getFreezeAtTimelineTime(timelineTime) {
                     return getSortedFreezes().find(f => {
                         const start = getFreezeTimelineStart(f);
-                        return timelineTime >= start && timelineTime < start + (Number(f.duration) || 0) - 0.001;
+                        return timelineTime >= start && timelineTime <= start + (Number(f.duration) || 0);
                     }) || null;
                 }
 
@@ -3635,25 +3628,7 @@
 
                 function getCurrentTimelineTime() {
                     if (activePlaybackFreeze) return getFreezeTimelineStart(activePlaybackFreeze) + (activePlaybackFreezeElapsed / 1000);
-                    const actualTimelineTime = videoToTimelineTime(proVideo ? proVideo.currentTime || 0 : 0);
-                    if (proTimelineHoldTime !== null) {
-                        if (performance.now() < proTimelineHoldUntil && actualTimelineTime < proTimelineHoldTime - 0.04) {
-                            return proTimelineHoldTime;
-                        }
-                        proTimelineHoldTime = null;
-                        proTimelineHoldUntil = 0;
-                    }
-                    return actualTimelineTime;
-                }
-
-                function holdTimelineAt(timelineTime, ms = 700) {
-                    proTimelineHoldTime = Math.max(0, Number(timelineTime) || 0);
-                    proTimelineHoldUntil = performance.now() + ms;
-                }
-
-                function clearTimelineHold() {
-                    proTimelineHoldTime = null;
-                    proTimelineHoldUntil = 0;
+                    return videoToTimelineTime(proVideo ? proVideo.currentTime || 0 : 0);
                 }
 
                 function clamp01(value) {
@@ -3684,18 +3659,6 @@
                     return { canvas: c, ctx };
                 }
 
-                function getNativeVideoFrame() {
-                    if (!proVideo || !proVideo.videoWidth || !proVideo.videoHeight) return null;
-                    const c = document.createElement('canvas');
-                    c.width = proVideo.videoWidth;
-                    c.height = proVideo.videoHeight;
-                    const ctx = c.getContext('2d', { alpha: false });
-                    ctx.imageSmoothingEnabled = true;
-                    ctx.imageSmoothingQuality = 'high';
-                    ctx.drawImage(proVideo, 0, 0, c.width, c.height);
-                    return { canvas: c, ctx };
-                }
-
                 function cropVideoFrameAt(x, y, size = 86) {
                     const frame = getCanvasVideoFrame();
                     if (!frame) return null;
@@ -3707,19 +3670,11 @@
 
                 function putImageDataScaled(ctx, imageData, x, y, w, h) {
                     if (!imageData) return;
-                    ctx.drawImage(getCachedImageDataCanvas(imageData), x, y, w, h);
-                }
-
-                function getCachedImageDataCanvas(imageData) {
-                    let cached = proImageDataCanvasCache.get(imageData);
-                    if (!cached) {
-                        cached = document.createElement('canvas');
-                        cached.width = imageData.width;
-                        cached.height = imageData.height;
-                        cached.getContext('2d').putImageData(imageData, 0, 0);
-                        proImageDataCanvasCache.set(imageData, cached);
-                    }
-                    return cached;
+                    const temp = document.createElement('canvas');
+                    temp.width = imageData.width;
+                    temp.height = imageData.height;
+                    temp.getContext('2d').putImageData(imageData, 0, 0);
+                    ctx.drawImage(temp, x, y, w, h);
                 }
 
                 function getAreaPoints(x1, y1, x2, y2, mode = proAreaMode) {
@@ -3832,7 +3787,6 @@
                     } else {
                         selectedProSegment = null;
                     }
-                    renderMainVideoTrack();
                     renderMarkersOnTrack();
                     renderDrawingSegments();
                     renderFreezeTrack();
@@ -3857,7 +3811,6 @@
                         if (typeof showToast === 'function') showToast('Marker silindi.');
                     }
                     selectedTimelineItem = null;
-                    renderMainVideoTrack();
                     renderMarkersOnTrack();
                     renderDrawingSegments();
                     renderFreezeTrack();
@@ -3878,65 +3831,17 @@
                             showToast(`Alan perspektifi: ${proAreaMode.toUpperCase()}`);
                         }
                     }
-                    if (e.key === '+' || e.key === '=') {
-                        e.preventDefault();
-                        resizeSelectedProSegment(1.14);
-                    }
-                    if (e.key === '-' || e.key === '_') {
-                        e.preventDefault();
-                        resizeSelectedProSegment(0.88);
-                    }
                 });
 
                 function drawImageDataScaled(targetCtx, imageData, targetW, targetH, offsetX = 0, offsetY = 0) {
                     if (!imageData) return;
-                    const tempC = getCachedImageDataCanvas(imageData);
+                    const tempC = document.createElement('canvas');
+                    tempC.width = imageData.width;
+                    tempC.height = imageData.height;
+                    tempC.getContext('2d').putImageData(imageData, 0, 0);
                     const scaleX = targetW / imageData.width;
                     const scaleY = targetH / imageData.height;
                     targetCtx.drawImage(tempC, offsetX * scaleX, offsetY * scaleY, targetW, targetH);
-                }
-
-                function scalePointAround(point, center, factor) {
-                    point.x = center.x + (point.x - center.x) * factor;
-                    point.y = center.y + (point.y - center.y) * factor;
-                }
-
-                function resizeSelectedProSegment(factor) {
-                    if (!selectedProSegment) {
-                        if (typeof showToast === 'function') showToast('Önce seçim aracıyla bir çizim veya efekt seçin.');
-                        return;
-                    }
-                    factor = Math.max(0.25, Math.min(4, Number(factor) || 1));
-                    const seg = selectedProSegment;
-                    const bounds = getProSegmentBounds(seg);
-                    if (!bounds) return;
-                    const center = {
-                        x: bounds.x + bounds.w / 2,
-                        y: bounds.y + bounds.h / 2
-                    };
-
-                    if (seg.meta) {
-                        const m = seg.meta;
-                        const startPoint = { x: m.x1, y: m.y1 };
-                        scalePointAround(startPoint, center, factor);
-                        m.x1 = startPoint.x;
-                        m.y1 = startPoint.y;
-                        const endPoint = { x: m.x2, y: m.y2 };
-                        scalePointAround(endPoint, center, factor);
-                        m.x2 = endPoint.x;
-                        m.y2 = endPoint.y;
-                        if (Array.isArray(m.points)) m.points.forEach(p => scalePointAround(p, center, factor));
-                        if (m.radius) m.radius = Math.max(4, m.radius * factor);
-                        if (m.zoomImageData || m.objectImageData) {
-                            m.radius = Math.max(4, (m.radius || Math.max(bounds.w, bounds.h) / 2) * factor);
-                        }
-                        seg.bounds = getProSegmentBounds(seg);
-                    } else {
-                        seg.scale = Math.max(0.25, Math.min(4, (Number(seg.scale) || 1) * factor));
-                    }
-
-                    renderDrawingSegments();
-                    renderAnnotationsOnVideo();
                 }
 
                 function getActiveDrawingSegmentsAt(time) {
@@ -4046,25 +3951,7 @@
                     if (!seg.meta) {
                         targetCtx.save();
                         targetCtx.globalAlpha = reveal;
-                        if (seg.scale && seg.scale !== 1 && seg.bounds) {
-                            const sourceW = seg.sourceWidth || seg.imageData.width || targetW;
-                            const sourceH = seg.sourceHeight || seg.imageData.height || targetH;
-                            const sx = targetW / sourceW;
-                            const sy = targetH / sourceH;
-                            const tempC = getCachedImageDataCanvas(seg.imageData);
-                            const scale = Number(seg.scale) || 1;
-                            const drawW = targetW * scale;
-                            const drawH = targetH * scale;
-                            const centerX = (seg.bounds.x + seg.bounds.w / 2 + (seg.offsetX || 0)) * sx;
-                            const centerY = (seg.bounds.y + seg.bounds.h / 2 + (seg.offsetY || 0)) * sy;
-                            const baseX = (seg.offsetX || 0) * sx;
-                            const baseY = (seg.offsetY || 0) * sy;
-                            const drawX = centerX - (centerX - baseX) * scale;
-                            const drawY = centerY - (centerY - baseY) * scale;
-                            targetCtx.drawImage(tempC, drawX, drawY, drawW, drawH);
-                        } else {
-                            drawImageDataScaled(targetCtx, seg.imageData, targetW, targetH, seg.offsetX || 0, seg.offsetY || 0);
-                        }
+                        drawImageDataScaled(targetCtx, seg.imageData, targetW, targetH, seg.offsetX || 0, seg.offsetY || 0);
                         targetCtx.restore();
                         return;
                     }
@@ -4222,15 +4109,9 @@
                     const sourceH = seg.sourceHeight || seg.imageData.height || proCanvas.height;
                     const scaleX = sourceW / proCanvas.width;
                     const scaleY = sourceH / proCanvas.height;
-                    let localX = Math.round((pos.x - (seg.offsetX || 0)) * scaleX);
-                    let localY = Math.round((pos.y - (seg.offsetY || 0)) * scaleY);
+                    const localX = Math.round((pos.x - (seg.offsetX || 0)) * scaleX);
+                    const localY = Math.round((pos.y - (seg.offsetY || 0)) * scaleY);
                     const bounds = seg.bounds || { x: 0, y: 0, w: sourceW, h: sourceH };
-                    if (seg.scale && seg.scale !== 1) {
-                        const centerX = bounds.x + bounds.w / 2;
-                        const centerY = bounds.y + bounds.h / 2;
-                        localX = Math.round(centerX + (localX - centerX) / seg.scale);
-                        localY = Math.round(centerY + (localY - centerY) / seg.scale);
-                    }
                     if (localX < bounds.x || localX > bounds.x + bounds.w || localY < bounds.y || localY > bounds.y + bounds.h) return false;
 
                     const radius = 6;
@@ -4286,13 +4167,10 @@
                     const file = event.target.files[0];
                     if (!file) return;
 
-                    clearTimelineHold();
-                    clearFreezePlaybackGuards();
                     proSourceFileName = (file.name || 'Clutch_VideoAnaliz_Edit').replace(/\.[^.]+$/, '');
                     const videoUrl = URL.createObjectURL(file);
                     proVideo.src = videoUrl;
                     proVideo.currentTime = 0;
-                    proMainVideoClip = null;
                     proMarkers = [];
                     proDrawingSegments = [];
                     proFreezes = [];
@@ -4303,18 +4181,11 @@
                     document.querySelectorAll('.video-draggable-text').forEach(el => el.remove());
                     clearProCanvas();
                     updateMarkerCount();
-                    renderMainVideoTrack();
                     renderMarkersOnTrack();
                     renderDrawingSegments();
                     renderFreezeTrack();
 
                     proVideo.onloadedmetadata = function () {
-                        proMainVideoClip = {
-                            id: 'main-video',
-                            start: 0,
-                            end: proVideo.duration || 0
-                        };
-                        proVideo.currentTime = getClipStart();
                         document.getElementById('proPlaceholder').style.display = 'none';
                         const wrapper = document.querySelector('.video-container-wrapper');
                         if (wrapper && proCanvas) {
@@ -4323,7 +4194,6 @@
                         }
                         document.getElementById('proDuration').innerText = formatTime(getVirtualDuration());
                         document.getElementById('proTotalTime').innerText = formatTime(getVirtualDuration());
-                        renderMainVideoTrack();
                         updateTimelineUi();
                         showToast('Video yüklendi. Analize başlayabilirsiniz.');
                     };
@@ -4388,34 +4258,7 @@
                 }
 
                 function clearProCanvas() {
-                    proLastAnnotationSignature = '';
                     if (proCtx && proCanvas) proCtx.clearRect(0, 0, proCanvas.width, proCanvas.height);
-                }
-
-                function invalidateProAnnotationRender() {
-                    proLastAnnotationSignature = '';
-                }
-
-                function getSegmentRenderSignature(seg, progress = 1) {
-                    if (!seg) return '';
-                    const m = seg.meta || {};
-                    const parts = [
-                        seg.id,
-                        seg.freezeId || '',
-                        seg.startTime,
-                        seg.endTime,
-                        seg.offsetX || 0,
-                        seg.offsetY || 0,
-                        seg.scale || 1,
-                        selectedProSegment && selectedProSegment.id === seg.id ? 'sel' : '',
-                        progress < 1 ? progress.toFixed(2) : 'done'
-                    ];
-                    if (seg.meta) {
-                        parts.push(m.tool || '', m.x1 || 0, m.y1 || 0, m.x2 || 0, m.y2 || 0, m.radius || 0, m.thickness || 0, m.color || '', m.areaMode || '');
-                    } else {
-                        parts.push(seg.imageData ? `${seg.imageData.width}x${seg.imageData.height}` : '');
-                    }
-                    return parts.join('|');
                 }
 
                 function clearAllVideoAnnotations() {
@@ -4427,7 +4270,6 @@
                     activePlaybackFreeze = null;
                     document.querySelectorAll('.video-draggable-text').forEach(el => el.remove());
                     clearProCanvas();
-                    renderMainVideoTrack();
                     renderDrawingSegments();
                     renderFreezeTrack();
                     renderMarkersOnTrack();
@@ -4465,7 +4307,7 @@
                     const btn = document.getElementById('proFullscreenBtn');
                     if (!btn) return;
                     const activeFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
-                    btn.innerText = activeFullscreen ? '⛶ Çık' : '⛶ Tam Ekran';
+                    btn.innerText = activeFullscreen ? '⛶ Cik' : '⛶ Tam Ekran';
                 }
 
                 document.addEventListener('fullscreenchange', updateProFullscreenButton);
@@ -4483,35 +4325,21 @@
                     const proTime = document.getElementById('proTime');
                     const totalEl = document.getElementById('proTotalTime');
                     const durationEl = document.getElementById('proDuration');
-                    if (proTimelineUiCache.pct === null || Math.abs(proTimelineUiCache.pct - pct) > 0.03) {
-                        proTimelineUiCache.pct = pct;
-                        if (fill) fill.style.width = pct + '%';
-                        if (head) head.style.left = pct + '%';
-                    }
-                    const timeText = formatTime(currentTimelineTime);
-                    const durationText = formatTime(virtualDuration);
-                    if (proTimelineUiCache.time !== timeText) {
-                        proTimelineUiCache.time = timeText;
-                        if (timeDisp) timeDisp.innerText = timeText;
-                        if (proTime) proTime.innerText = timeText;
-                    }
-                    if (proTimelineUiCache.duration !== durationText) {
-                        proTimelineUiCache.duration = durationText;
-                        if (totalEl) totalEl.innerText = durationText;
-                        if (durationEl) durationEl.innerText = durationText;
-                    }
+                    if (fill) fill.style.width = pct + '%';
+                    if (head) head.style.left = pct + '%';
+                    if (timeDisp) timeDisp.innerText = formatTime(currentTimelineTime);
+                    if (proTime) proTime.innerText = formatTime(currentTimelineTime);
+                    if (totalEl) totalEl.innerText = formatTime(virtualDuration);
+                    if (durationEl) durationEl.innerText = formatTime(virtualDuration);
                     renderTimelineRuler(virtualDuration);
-                    updatePlayhead(pct);
+                    updatePlayhead();
                 }
 
                 function renderTimelineRuler(virtualDuration) {
                     const bar = document.getElementById('proTimelineBar');
                     if (!bar || !virtualDuration) return;
-                    const step = virtualDuration > 60 ? 10 : virtualDuration > 25 ? 5 : 3;
-                    const signature = `${virtualDuration.toFixed(2)}:${step}`;
-                    if (proTimelineRulerSignature === signature && bar.querySelector('.timeline-ruler-tick')) return;
-                    proTimelineRulerSignature = signature;
                     bar.querySelectorAll('.timeline-ruler-tick').forEach(el => el.remove());
+                    const step = virtualDuration > 60 ? 10 : virtualDuration > 25 ? 5 : 3;
                     for (let t = 0; t <= virtualDuration + 0.001; t += step) {
                         const tick = document.createElement('div');
                         tick.className = 'timeline-ruler-tick';
@@ -4575,9 +4403,6 @@
 
                 if (proVideo) {
                     proVideo.addEventListener('play', () => {
-                        if (proMainVideoClip && !isVideoTimeInClip(proVideo.currentTime || 0)) {
-                            proVideo.currentTime = getClipStart();
-                        }
                         if (!freezeActive) {
                             activePlaybackFreeze = null;
                             activePlaybackFreezeElapsed = 0;
@@ -4592,7 +4417,7 @@
                         }
                     });
                     proVideo.addEventListener('pause', () => {
-                        if (activePlaybackFreeze && Math.abs((proVideo.currentTime || 0) - (activePlaybackFreeze.time || 0)) > 0.08) {
+                        if (!freezeActive && activePlaybackFreeze && Math.abs((proVideo.currentTime || 0) - (activePlaybackFreeze.time || 0)) > 0.08) {
                             activePlaybackFreeze = null;
                             activePlaybackFreezeElapsed = 0;
                             renderAnnotationsOnVideo();
@@ -4600,39 +4425,20 @@
                         if (proPlaybackRenderFrame) cancelAnimationFrame(proPlaybackRenderFrame);
                         proPlaybackRenderFrame = null;
                     });
-                    proVideo.addEventListener('timeupdate', () => {
-                        if (proMainVideoClip && (proVideo.currentTime || 0) >= getClipEnd() - 0.015) {
-                            proVideo.pause();
-                            proVideo.currentTime = getClipEnd();
-                            updateTimelineUi();
-                        }
-                    });
                 }
 
                 function startProPlaybackRenderLoop() {
                     if (!proVideo || proPlaybackRenderFrame) return;
-                    const tick = (ts) => {
+                    const tick = () => {
                         proPlaybackRenderFrame = null;
                         if (!proVideo || proVideo.paused || proVideo.ended) return;
-                        if (!proLastPlaybackRenderAt || ts - proLastPlaybackRenderAt >= PRO_PLAYBACK_RENDER_INTERVAL_MS) {
-                            proLastPlaybackRenderAt = ts;
-                            renderAnnotationsOnVideo();
-                            updateTimelineUi();
-                        }
+                        checkFreezePlayback();
+                        if (!proVideo || proVideo.paused || proVideo.ended) return;
+                        renderAnnotationsOnVideo();
+                        updateTimelineUi();
                         proPlaybackRenderFrame = requestAnimationFrame(tick);
                     };
                     proPlaybackRenderFrame = requestAnimationFrame(tick);
-                }
-
-                function stopProPlaybackRenderLoop() {
-                    if (proPlaybackRenderFrame) cancelAnimationFrame(proPlaybackRenderFrame);
-                    proPlaybackRenderFrame = null;
-                    proLastPlaybackRenderAt = 0;
-                }
-
-                function stopProAnnotationAnimation() {
-                    if (proAnnotationAnimFrame) cancelAnimationFrame(proAnnotationAnimFrame);
-                    proAnnotationAnimFrame = null;
                 }
 
                 function getProMousePos(evt) {
@@ -4908,7 +4714,6 @@
 
                 function seekVirtualTimeline(timelineTime) {
                     if (!proVideo || !proVideo.duration) return;
-                    clearTimelineHold();
                     const freeze = getFreezeAtTimelineTime(timelineTime);
                     if (freeze) {
                         selectTimelineItem('freeze', freeze.id);
@@ -4956,128 +4761,6 @@
                     });
                 }
 
-                function renderMainVideoTrack() {
-                    const track = document.getElementById('track-main-video');
-                    if (!track) return;
-                    track.innerHTML = '';
-                    track.style.background = 'repeating-linear-gradient(90deg, rgba(255,179,71,0.10) 0 1px, transparent 1px 39px), #18140f';
-                    track.style.borderRadius = '0';
-                    track.style.borderColor = 'rgba(255,179,71,0.36)';
-
-                    if (!proVideo || !proVideo.duration || !proMainVideoClip) {
-                        updatePlayhead();
-                        return;
-                    }
-
-                    const fullDuration = proVideo.duration || 1;
-                    const start = getClipStart();
-                    const end = getClipEnd();
-                    const virtualDuration = getVirtualDuration() || fullDuration;
-                    const leftPct = 0;
-                    const widthPct = Math.max((getBaseVideoDuration() / virtualDuration) * 100, 0.8);
-                    const block = document.createElement('div');
-                    const isSelected = selectedTimelineItem && selectedTimelineItem.type === 'main-video';
-                    block.style.cssText = `position:absolute; left:${leftPct}%; width:${widthPct}%; top:5px; height:22px; background:linear-gradient(90deg, rgba(255,179,71,0.95), rgba(255,107,0,0.62)); border:1px solid rgba(255,230,190,0.85); border-radius:3px; box-sizing:border-box; color:#111; font-size:10px; font-weight:900; line-height:20px; padding:0 10px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; cursor:grab;`;
-                    if (isSelected) {
-                        block.style.outline = '2px solid #fff';
-                        block.style.boxShadow = '0 0 0 3px rgba(255,179,71,0.24), 0 8px 18px rgba(0,0,0,0.35)';
-                    }
-                    block.innerText = `Ana video ${formatTime(start)} - ${formatTime(end)}`;
-                    block.title = 'Ana video | Kenarlardan surukle: sureyi kirp | Govdeden surukle: araligi tasi';
-
-                    const leftHandle = document.createElement('div');
-                    leftHandle.style.cssText = 'position:absolute; left:0; top:0; bottom:0; width:8px; cursor:ew-resize; background:rgba(255,255,255,0.58); border-radius:3px 0 0 3px;';
-                    const rightHandle = document.createElement('div');
-                    rightHandle.style.cssText = 'position:absolute; right:0; top:0; bottom:0; width:8px; cursor:ew-resize; background:rgba(255,255,255,0.58); border-radius:0 3px 3px 0;';
-
-                    leftHandle.addEventListener('mousedown', (e) => {
-                        e.stopPropagation();
-                        selectedTimelineItem = { type: 'main-video', id: 'main-video' };
-                        const startX = e.clientX;
-                        const originalStart = getClipStart();
-                        const originalEnd = getClipEnd();
-                        const trackRect = track.getBoundingClientRect();
-                        function onMove(ev) {
-                            const dx = ev.clientX - startX;
-                            const dtSec = (dx / trackRect.width) * fullDuration;
-                            proMainVideoClip.start = Math.max(0, Math.min(originalEnd - 0.25, originalStart + dtSec));
-                            if (proVideo.currentTime < getClipStart()) proVideo.currentTime = getClipStart();
-                            renderMainVideoTrack();
-                            renderMarkersOnTrack();
-                            renderDrawingSegments();
-                            renderFreezeTrack();
-                            updateTimelineUi();
-                            renderAnnotationsOnVideo();
-                        }
-                        function onUp() { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); }
-                        document.addEventListener('mousemove', onMove);
-                        document.addEventListener('mouseup', onUp);
-                    });
-
-                    rightHandle.addEventListener('mousedown', (e) => {
-                        e.stopPropagation();
-                        selectedTimelineItem = { type: 'main-video', id: 'main-video' };
-                        const startX = e.clientX;
-                        const originalEnd = getClipEnd();
-                        const trackRect = track.getBoundingClientRect();
-                        function onMove(ev) {
-                            const dx = ev.clientX - startX;
-                            const dtSec = (dx / trackRect.width) * fullDuration;
-                            proMainVideoClip.end = Math.min(fullDuration, Math.max(getClipStart() + 0.25, originalEnd + dtSec));
-                            if (proVideo.currentTime > getClipEnd()) proVideo.currentTime = getClipEnd();
-                            renderMainVideoTrack();
-                            renderMarkersOnTrack();
-                            renderDrawingSegments();
-                            renderFreezeTrack();
-                            updateTimelineUi();
-                            renderAnnotationsOnVideo();
-                        }
-                        function onUp() { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); }
-                        document.addEventListener('mousemove', onMove);
-                        document.addEventListener('mouseup', onUp);
-                    });
-
-                    block.addEventListener('mousedown', (e) => {
-                        if (e.target === leftHandle || e.target === rightHandle) return;
-                        e.stopPropagation();
-                        selectedTimelineItem = { type: 'main-video', id: 'main-video' };
-                        const startX = e.clientX;
-                        const originalStart = getClipStart();
-                        const clipDuration = getBaseVideoDuration();
-                        const trackRect = track.getBoundingClientRect();
-                        function onMove(ev) {
-                            const dx = ev.clientX - startX;
-                            const dtSec = (dx / trackRect.width) * fullDuration;
-                            const nextStart = Math.max(0, Math.min(fullDuration - clipDuration, originalStart + dtSec));
-                            proMainVideoClip.start = nextStart;
-                            proMainVideoClip.end = nextStart + clipDuration;
-                            proVideo.currentTime = getClipStart();
-                            renderMainVideoTrack();
-                            renderMarkersOnTrack();
-                            renderDrawingSegments();
-                            renderFreezeTrack();
-                            updateTimelineUi();
-                            renderAnnotationsOnVideo();
-                        }
-                        function onUp() { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); }
-                        document.addEventListener('mousemove', onMove);
-                        document.addEventListener('mouseup', onUp);
-                    });
-
-                    block.addEventListener('click', (e) => {
-                        if (e.target === leftHandle || e.target === rightHandle) return;
-                        selectedTimelineItem = { type: 'main-video', id: 'main-video' };
-                        proVideo.currentTime = getClipStart();
-                        renderMainVideoTrack();
-                        updateTimelineUi();
-                    });
-
-                    block.appendChild(leftHandle);
-                    block.appendChild(rightHandle);
-                    track.appendChild(block);
-                    updatePlayhead();
-                }
-
                 function addMarker(time) {
                     proMarkers.push({ id: Date.now(), time });
                     renderMarkersOnTrack();
@@ -5092,7 +4775,7 @@
                     track.style.background = 'repeating-linear-gradient(90deg, rgba(255,255,255,0.055) 0 1px, transparent 1px 39px), #151519';
                     track.style.borderRadius = '0';
                     track.style.borderColor = '#2c2c32';
-                    proMarkers.filter(m => isVideoTimeInClip(Number(m.time) || 0)).forEach(m => {
+                    proMarkers.forEach(m => {
                         const pct = (videoToTimelineTime(m.time) / getVirtualDuration()) * 100;
                         const dot = document.createElement('div');
                         const isSelected = selectedTimelineItem && selectedTimelineItem.type === 'marker' && String(selectedTimelineItem.id) === String(m.id);
@@ -5117,7 +4800,7 @@
                     const selectedFreeze = selectedTimelineItem && selectedTimelineItem.type === 'freeze' ? getFreezeById(selectedTimelineItem.id) : null;
                     const targetFreeze = activePlaybackFreeze || selectedFreeze;
                     const startTime = targetFreeze ? targetFreeze.time : proVideo.currentTime;
-                    const endTime = targetFreeze ? Math.min(targetFreeze.time + targetFreeze.duration, getClipEnd()) : Math.min(startTime + 2, getClipEnd());
+                    const endTime = targetFreeze ? Math.min(targetFreeze.time + targetFreeze.duration, proVideo.duration) : Math.min(startTime + 2, proVideo.duration);
                     const color = proCurrentColor;
                     const meta = buildProSegmentMeta(proCurrentTool, proStartX, proStartY, proLastX, proLastY);
                     const fullImageData = proCtx.getImageData(0, 0, proCanvas.width, proCanvas.height);
@@ -5160,7 +4843,7 @@
                 function renderAnnotationsOnVideo() {
                     if (!proCtx || !proCanvas) return;
                     const selectedFreeze = selectedTimelineItem && selectedTimelineItem.type === 'freeze' ? getFreezeById(selectedTimelineItem.id) : null;
-                    const canPreviewSelectedFreeze = selectedFreeze && proVideo && proVideo.paused && Math.abs((proVideo.currentTime || 0) - (selectedFreeze.time || 0)) < 0.035;
+                    const canPreviewSelectedFreeze = selectedFreeze && proVideo && proVideo.paused && Math.abs((proVideo.currentTime || 0) - (selectedFreeze.time || 0)) < 0.08;
                     const freezeContext = activePlaybackFreeze || (canPreviewSelectedFreeze ? selectedFreeze : null);
                     const t = freezeContext ? freezeContext.time : proVideo.currentTime;
                     const now = performance.now();
@@ -5176,20 +4859,6 @@
                         return true;
                     });
 
-                    const drawable = active.map(seg => {
-                        const progress = getSegmentRevealProgress(seg, now);
-                        if (progress < 1) needsNextFrame = true;
-                        return { seg, progress };
-                    });
-                    const signature = [
-                        proCanvas.width,
-                        proCanvas.height,
-                        freezeContext ? String(freezeContext.id) : '',
-                        drawable.map(item => getSegmentRenderSignature(item.seg, item.progress)).join('~')
-                    ].join('::');
-                    if (signature === proLastAnnotationSignature && !needsNextFrame) return;
-                    proLastAnnotationSignature = signature;
-
                     proCtx.clearRect(0, 0, proCanvas.width, proCanvas.height);
 
                     if (freezeContext && freezeContext.imageData) {
@@ -5199,11 +4868,13 @@
                         proCtx.restore();
                     }
 
-                    drawable.forEach(({ seg, progress }) => {
+                    active.forEach(seg => {
+                        const progress = getSegmentRevealProgress(seg, now);
+                        if (progress < 1) needsNextFrame = true;
                         drawProSegment(proCtx, seg, proCanvas.width, proCanvas.height, selectedProSegment && selectedProSegment.id === seg.id, progress);
                     });
 
-                    if (needsNextFrame && (!proVideo || proVideo.paused) && !activePlaybackFreeze) {
+                    if (needsNextFrame) {
                         if (proAnnotationAnimFrame) cancelAnimationFrame(proAnnotationAnimFrame);
                         proAnnotationAnimFrame = requestAnimationFrame(renderAnnotationsOnVideo);
                     }
@@ -5312,7 +4983,7 @@
                             function onMove(ev) {
                                 const dx = ev.clientX - startX;
                                 const dtSec = (dx / trackRect.width) * virtualDuration;
-                                if (!seg.freezeId) seg.startTime = Math.max(getClipStart(), Math.min(seg.endTime - 0.1, timelineToVideoTime(videoToTimelineTime(origStart) + dtSec)));
+                                if (!seg.freezeId) seg.startTime = Math.max(0, Math.min(seg.endTime - 0.1, timelineToVideoTime(videoToTimelineTime(origStart) + dtSec)));
                                 renderDrawingSegments();
                                 renderAnnotationsOnVideo();
                             }
@@ -5333,7 +5004,7 @@
                             function onMove(ev) {
                                 const dx = ev.clientX - startX;
                                 const dtSec = (dx / trackRect.width) * virtualDuration;
-                                if (!seg.freezeId) seg.endTime = Math.max(seg.startTime + 0.1, Math.min(getClipEnd(), timelineToVideoTime(videoToTimelineTime(origEnd) + dtSec)));
+                                if (!seg.freezeId) seg.endTime = Math.max(seg.startTime + 0.1, Math.min(proVideo.duration, timelineToVideoTime(videoToTimelineTime(origEnd) + dtSec)));
                                 renderDrawingSegments();
                                 renderAnnotationsOnVideo();
                             }
@@ -5360,7 +5031,7 @@
                                 const dx = ev.clientX - startX;
                                 const dtSec = (dx / trackRect.width) * virtualDuration;
                                 let nextStart = timelineToVideoTime(videoToTimelineTime(originalStart) + dtSec);
-                                nextStart = Math.max(getClipStart(), Math.min(getClipEnd() - clipDuration, nextStart));
+                                nextStart = Math.max(0, Math.min(proVideo.duration - clipDuration, nextStart));
                                 if (!seg.freezeId) {
                                     seg.startTime = nextStart;
                                     seg.endTime = nextStart + clipDuration;
@@ -5401,21 +5072,19 @@
                     updatePlayhead();
                 }
 
-                function updatePlayhead(pctOverride = null) {
+                function updatePlayhead() {
                     if (!proVideo || !proVideo.duration) return;
-                    const pct = pctOverride !== null ? pctOverride : (getCurrentTimelineTime() / (getVirtualDuration() || proVideo.duration) * 100);
-                    ['track-main-video', 'track-drawings', 'track-freeze', 'track-markers'].forEach(trackId => {
+                    const pct = (getCurrentTimelineTime() / (getVirtualDuration() || proVideo.duration) * 100);
+                    ['track-drawings', 'track-freeze', 'track-markers'].forEach(trackId => {
                         const track = document.getElementById(trackId);
                         if (!track) return;
-                        let ph = proPlayheadCache[trackId];
-                        if (!ph || !ph.isConnected || ph.parentElement !== track) ph = track.querySelector('.track-playhead');
+                        let ph = track.querySelector('.track-playhead');
                         if (!ph) {
                             ph = document.createElement('div');
                             ph.className = 'track-playhead';
                             ph.style.cssText = `position:absolute;top:0;bottom:0;width:2px;background:#ff4757;pointer-events:none;z-index:30;box-shadow:0 0 8px rgba(255,71,87,0.75);`;
-                        track.appendChild(ph);
+                            track.appendChild(ph);
                         }
-                        proPlayheadCache[trackId] = ph;
                         ph.style.left = pct + '%';
                     });
                 }
@@ -5450,17 +5119,16 @@
                     if (!proVideo.paused) proVideo.pause();
 
                     const duration = parseInt(document.getElementById('freezeDuration').value) || 3;
-                    const freezeTime = Math.max(getClipStart(), Math.min(getClipEnd(), proVideo.currentTime));
-                    const frame = getNativeVideoFrame() || getCanvasVideoFrame();
+                    const freezeTime = proVideo.currentTime;
+                    const frame = getCanvasVideoFrame();
 
-                    // Freeze karesini videonun kendi cozunurlugunden yakala.
+                    // Mevcut çizim verisini kaydet
                     const drawingData = frame
-                        ?
-                         frame.ctx.getImageData(0, 0, frame.canvas.width, frame.canvas.height)
+                        ? frame.ctx.getImageData(0, 0, frame.canvas.width, frame.canvas.height)
                         : proCtx.getImageData(0, 0, proCanvas.width, proCanvas.height);
 
                     const freeze = {
-                        id: `freeze-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+                        id: Date.now(),
                         time: freezeTime,
                         duration: duration,
                         imageData: drawingData,
@@ -5484,8 +5152,7 @@
                 function stepFrame(dir) {
                     if (!proVideo || !proVideo.duration) return;
                     if (!proVideo.paused) proVideo.pause();
-                    clearTimelineHold();
-                    proVideo.currentTime = Math.max(getClipStart(), Math.min(getClipEnd(), proVideo.currentTime + (dir * (1 / 30))));
+                    proVideo.currentTime = Math.max(0, Math.min(proVideo.duration, proVideo.currentTime + (dir * (1 / 30))));
                 }
 
                 function syncFreezeDrawingTimes(freeze) {
@@ -5493,7 +5160,7 @@
                     proDrawingSegments.forEach(seg => {
                         if (String(seg.freezeId) === String(freeze.id)) {
                             seg.startTime = freeze.time;
-                            seg.endTime = Math.min(freeze.time + freeze.duration, getClipEnd());
+                            seg.endTime = Math.min(freeze.time + freeze.duration, proVideo.duration);
                         }
                     });
                 }
@@ -5543,7 +5210,7 @@
                             function onMove(ev) {
                                 const dx = ev.clientX - startX;
                                 const dtSec = (dx / trackRect.width) * getVirtualDuration();
-                                const nextTime = Math.max(getClipStart(), Math.min(getClipEnd(), timelineToVideoTime(videoToTimelineTime(origTime) + dtSec)));
+                                const nextTime = Math.max(0, Math.min(proVideo.duration, timelineToVideoTime(videoToTimelineTime(origTime) + dtSec)));
                                 f.duration = Math.max(0.5, origDuration + (origTime - nextTime));
                                 f.time = nextTime;
                                 syncFreezeDrawingTimes(f);
@@ -5584,14 +5251,14 @@
                             selectTimelineItem('freeze', f.id);
                             const startX = e.clientX;
                             const originalTime = f.time;
-                            const duration = Math.min(f.duration, getBaseVideoDuration());
+                            const duration = Math.min(f.duration, proVideo.duration);
                             const trackRect = track.getBoundingClientRect();
                             let moved = false;
                             function onMove(ev) {
                                 moved = true;
                                 const dx = ev.clientX - startX;
                                 const dtSec = (dx / trackRect.width) * getVirtualDuration();
-                                f.time = Math.max(getClipStart(), Math.min(getClipEnd(), timelineToVideoTime(videoToTimelineTime(originalTime) + dtSec)));
+                                f.time = Math.max(0, Math.min(proVideo.duration, timelineToVideoTime(videoToTimelineTime(originalTime) + dtSec)));
                                 syncFreezeDrawingTimes(f);
                                 proVideo.currentTime = f.time;
                                 renderFreezeTrack();
@@ -5620,7 +5287,6 @@
                     proDrawingSegments = proDrawingSegments.filter(seg => !seg.freezeId || !freezeIds.has(String(seg.freezeId)));
                     activePlaybackFreeze = null;
                     activePlaybackFreezeElapsed = 0;
-                    clearTimelineHold();
                     if (selectedTimelineItem && selectedTimelineItem.type === 'freeze') selectedTimelineItem = null;
                     renderFreezeTrack();
                     renderDrawingSegments();
@@ -5634,97 +5300,46 @@
                 let freezeActive = false;
                 let freezeTimeout = null;
                 let lastFreezeCheckTime = 0;
-                let lastCompletedFreezeId = null;
-                let lastCompletedFreezeGuardUntil = 0;
-                let freezePlaybackStackIds = new Set();
-                let freezeInternalSeekUntil = 0;
-                const FREEZE_PLAYBACK_EPSILON = 0.012;
-                const FREEZE_RESUME_OFFSET = 0.08;
-                const FREEZE_STACK_WINDOW = 0.04;
 
-                function clearFreezePlaybackGuards() {
-                    lastCompletedFreezeId = null;
-                    lastCompletedFreezeGuardUntil = 0;
-                    freezePlaybackStackIds.clear();
-                }
-
-                function markFreezeInternalSeek() {
-                    freezeInternalSeekUntil = performance.now() + 900;
-                }
-
-                function isFreezeInternalSeek() {
-                    return performance.now() < freezeInternalSeekUntil;
-                }
-
-                function getNextCrossedFreeze(prevTime, currentTime) {
-                    if (!proFreezes.length || currentTime < prevTime - 0.05) return null;
-                    const prev = Number(prevTime) || 0;
-                    const current = Number(currentTime) || 0;
-                    if (lastCompletedFreezeId && current > lastCompletedFreezeGuardUntil) {
-                        clearFreezePlaybackGuards();
-                    }
-                    return getSortedFreezes().find(f => {
-                        const freezeTime = Number(f.time) || 0;
-                        if (lastCompletedFreezeId === String(f.id) && current <= lastCompletedFreezeGuardUntil) return false;
-                        const crossedFreeze = prev < freezeTime - FREEZE_PLAYBACK_EPSILON && current >= freezeTime - FREEZE_PLAYBACK_EPSILON;
-                        const startedOnFreeze = Math.abs(prev - freezeTime) <= FREEZE_PLAYBACK_EPSILON && current > freezeTime;
-                        return crossedFreeze || startedOnFreeze;
-                    }) || null;
-                }
-
-                function getNextStackedFreeze(freeze) {
-                    const freezeTime = Number(freeze && freeze.time) || 0;
-                    return getSortedFreezes().find(f => {
-                        const id = String(f.id);
-                        if (freezePlaybackStackIds.has(id)) return false;
-                        return Math.abs((Number(f.time) || 0) - freezeTime) <= FREEZE_STACK_WINDOW;
-                    }) || null;
-                }
-
-                function startPlaybackFreeze(freeze, keepStack = false) {
-                    if (!freeze || !proVideo) return;
-                    clearTimelineHold();
-                    if (!keepStack) freezePlaybackStackIds.clear();
-                    freezePlaybackStackIds.add(String(freeze.id));
-                    const freezeTime = Number(freeze.time) || 0;
+                function enterFreezePlayback(freeze) {
+                    if (!freeze || freezeActive || !proVideo || !proVideo.duration || freeze._played) return false;
+                    freeze._played = true;
                     freezeActive = true;
-                    proVideo.pause();
-                    markFreezeInternalSeek();
-                    proVideo.currentTime = freezeTime;
-                    lastFreezeCheckTime = freezeTime;
                     activePlaybackFreeze = freeze;
                     activePlaybackFreezeElapsed = 0;
+                    lastFreezeCheckTime = freeze.time || 0;
+                    proVideo.pause();
+                    proVideo.currentTime = freeze.time || 0;
                     renderAnnotationsOnVideo();
                     updateTimelineUi();
-                    animateFreezeDrawing(freeze, freeze.duration * 1000, () => finishPlaybackFreeze(freeze));
+
+                    animateFreezeDrawing(freeze, (Number(freeze.duration) || 0) * 1000, () => {
+                        freezeActive = false;
+                        activePlaybackFreeze = null;
+                        activePlaybackFreezeElapsed = 0;
+                        proVideo.currentTime = freeze.time || 0;
+                        lastFreezeCheckTime = proVideo.currentTime || 0;
+                        renderAnnotationsOnVideo();
+                        updateTimelineUi();
+                        proVideo.play();
+                    });
+                    return true;
                 }
 
-                function finishPlaybackFreeze(freeze) {
-                    const freezeTime = Number(freeze.time) || 0;
-                    const nextStackedFreeze = getNextStackedFreeze(freeze);
-                    if (nextStackedFreeze) {
-                        startPlaybackFreeze(nextStackedFreeze, true);
-                        return;
+                function checkFreezePlayback() {
+                    if (!proVideo || freezeActive || proVideo.paused || !proVideo.duration) return false;
+                    const t = proVideo.currentTime || 0;
+                    const prev = lastFreezeCheckTime || t;
+                    lastFreezeCheckTime = t;
+
+                    for (const f of getSortedFreezes()) {
+                        const freezeTime = f.time || 0;
+                        const crossedFreeze = prev <= freezeTime && t >= freezeTime;
+                        const closeToFreeze = Math.abs(t - freezeTime) < 0.035;
+                        if ((crossedFreeze || closeToFreeze) && enterFreezePlayback(f)) return true;
+                        if (t < freezeTime - 0.5 || t > freezeTime + Math.max(1, Number(f.duration || 0) + 0.5)) f._played = false;
                     }
-                    freezeActive = false;
-                    activePlaybackFreeze = null;
-                    activePlaybackFreezeElapsed = 0;
-                    lastCompletedFreezeId = String(freeze.id);
-                    lastCompletedFreezeGuardUntil = freezeTime + 0.35;
-                    freezePlaybackStackIds.clear();
-                    holdTimelineAt(getFreezeTimelineStart(freeze) + (Number(freeze.duration) || 0));
-                    const resumeLimit = proMainVideoClip ? getClipEnd() : (proVideo.duration || getClipEnd());
-                    const resumeTime = Math.min(resumeLimit, freezeTime + FREEZE_RESUME_OFFSET);
-                    markFreezeInternalSeek();
-                    proVideo.currentTime = resumeTime;
-                    lastFreezeCheckTime = resumeTime;
-                    renderAnnotationsOnVideo();
-                    updateTimelineUi();
-                    proVideo.play().catch(() => {
-                        setTimeout(() => {
-                            if (proVideo && proVideo.paused && !freezeActive) proVideo.play().catch(() => {});
-                        }, 120);
-                    });
+                    return false;
                 }
 
                 if (proVideo) {
@@ -5732,19 +5347,43 @@
                         lastFreezeCheckTime = proVideo.currentTime || 0;
                     });
                     proVideo.addEventListener('timeupdate', () => {
+                        checkFreezePlayback();
+                        return;
                         if (freezeActive || proVideo.paused) return;
                         const t = proVideo.currentTime;
                         const prev = lastFreezeCheckTime;
                         lastFreezeCheckTime = t;
 
-                        const freeze = getNextCrossedFreeze(prev, t);
-                        if (freeze) {
-                            startPlaybackFreeze(freeze);
-                            return;
+                        for (const f of proFreezes) {
+                            // Freeze noktasına 0.05 sn yakınlıktaysa tetikle
+                            const crossedFreeze = prev <= f.time && t >= f.time;
+                            const closeToFreeze = Math.abs(t - f.time) < 0.2;
+                            if ((crossedFreeze || closeToFreeze) && !f._played) {
+                                f._played = true;
+                                freezeActive = true;
+                                proVideo.pause();
+                                proVideo.currentTime = f.time;
+                                lastFreezeCheckTime = f.time;
+                                activePlaybackFreeze = f;
+                                activePlaybackFreezeElapsed = 0;
+                                renderAnnotationsOnVideo();
+
+                                animateFreezeDrawing(f, f.duration * 1000, () => {
+                                    freezeActive = false;
+                                    activePlaybackFreeze = null;
+                                    activePlaybackFreezeElapsed = 0;
+                                    proVideo.currentTime = Math.min(proVideo.duration, f.time + 0.04);
+                                    lastFreezeCheckTime = proVideo.currentTime;
+                                    renderAnnotationsOnVideo();
+                                    proVideo.play();
+                                });
+                                return;
+                            }
+                            // Oynatma ileri gidince _played flag'ini temizle
+                            if (t < f.time - 0.5 || t > f.time + Math.max(1, Number(f.duration || 0) + 0.5)) f._played = false;
                         }
                     });
                     proVideo.addEventListener('seeked', () => {
-                        if (!isFreezeInternalSeek()) clearFreezePlaybackGuards();
                         lastFreezeCheckTime = proVideo.currentTime || 0;
                     });
                 }
@@ -5798,8 +5437,7 @@
                     const margin = Math.max(18, Math.round(canvasW * 0.018));
                     const rightOffset = Math.max(70, Math.round(canvasW * 0.075));
                     const ratio = clutchWatermarkLogo.naturalWidth && clutchWatermarkLogo.naturalHeight
-                        ?
-                         clutchWatermarkLogo.naturalHeight / clutchWatermarkLogo.naturalWidth
+                        ? clutchWatermarkLogo.naturalHeight / clutchWatermarkLogo.naturalWidth
                         : 1.3;
                     const logoH = Math.max(88, Math.min(186, Math.round(canvasH * 0.17)));
                     const logoW = Math.round(logoH / ratio);
@@ -6079,10 +5717,9 @@
                 }
 
                 async function canvasToVp8Frame(canvas, quality = 0.82) {
-                    const opaqueCanvas = canvas._opaqueExportCanvas || document.createElement('canvas');
-                    if (!canvas._opaqueExportCanvas) canvas._opaqueExportCanvas = opaqueCanvas;
-                    if (opaqueCanvas.width !== canvas.width) opaqueCanvas.width = canvas.width;
-                    if (opaqueCanvas.height !== canvas.height) opaqueCanvas.height = canvas.height;
+                    const opaqueCanvas = document.createElement('canvas');
+                    opaqueCanvas.width = canvas.width;
+                    opaqueCanvas.height = canvas.height;
                     const opaqueCtx = opaqueCanvas.getContext('2d', { alpha: false });
                     opaqueCtx.fillStyle = '#000';
                     opaqueCtx.fillRect(0, 0, opaqueCanvas.width, opaqueCanvas.height);
@@ -6092,16 +5729,11 @@
                     return webmExtractVp8(new Uint8Array(await blob.arrayBuffer()));
                 }
 
-                async function downloadVideoBlob(blob, fileName, saveHandle, savePath = null) {
+                async function downloadVideoBlob(blob, fileName, saveHandle) {
                     if (saveHandle) {
                         const writable = await saveHandle.createWritable();
                         await writable.write(blob);
                         await writable.close();
-                        return;
-                    }
-                    if (savePath) {
-                        const buffer = Buffer.from(await blob.arrayBuffer());
-                        await require('fs').promises.writeFile(savePath, buffer);
                         return;
                     }
                     const url = URL.createObjectURL(blob);
@@ -6112,15 +5744,6 @@
                     a.click();
                     a.remove();
                     URL.revokeObjectURL(url);
-                }
-
-                function getVideoMimeExtension(mimeType) {
-                    return String(mimeType || '').includes('mp4') ? 'mp4' : 'webm';
-                }
-
-                function withVideoExtension(fileName, mimeType) {
-                    const ext = getVideoMimeExtension(mimeType);
-                    return String(fileName || `Clutch_VideoAnaliz_Edit.${ext}`).replace(/\.(webm|mp4)$/i, `.${ext}`);
                 }
 
                 async function recordStabilizedWebM(canvas, drawFrame, duration, fps, fileName, exportBtn, bitrate = 24000000, saveHandle = null) {
@@ -6153,10 +5776,9 @@
                     const blob = await done;
                     stream.getTracks().forEach(track => track.stop());
                     await downloadVideoBlob(blob, fileName, saveHandle);
-                    chunks.length = 0;
                 }
 
-                async function recordSmoothRealtimeWebM(canvas, videoEl, drawFrame, duration, fps, fileName, exportBtn, bitrate = 24000000, saveHandle = null, savePath = null) {
+                async function recordSmoothRealtimeWebM(canvas, videoEl, drawFrame, duration, fps, fileName, exportBtn, bitrate = 24000000, saveHandle = null) {
                     const mimeType = getSupportedVideoMime() || 'video/webm';
                     const stream = canvas.captureStream(fps);
                     const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: bitrate });
@@ -6166,73 +5788,62 @@
                         recorder.onstop = () => resolve(new Blob(chunks, { type: mimeType }));
                     });
 
-                    let loopError = null;
-                    let recorderStarted = false;
-                    try {
-                        await waitForExportVideoSeek(videoEl, timelineToVideoTime(0));
-                        videoEl.playbackRate = 1;
-                        await videoEl.play().catch(() => {});
+                    await waitForExportVideoSeek(videoEl, 0);
+                    videoEl.playbackRate = 1;
+                    await videoEl.play().catch(() => {});
 
-                        recorder.start(250);
-                        recorderStarted = true;
-                        const start = performance.now();
-                        let lastPct = -1;
-                        let lastSyncAt = 0;
+                    recorder.start(250);
+                    const start = performance.now();
+                    let lastPct = -1;
+                    let lastSyncAt = 0;
 
-                        while (true) {
-                            const timelineTime = Math.min(duration, (performance.now() - start) / 1000);
-                            const activeFreeze = getFreezeAtTimelineTime(timelineTime + (0.5 / fps));
-                            const upcomingFreeze = activeFreeze ? null : getUpcomingFreezeAtTimelineTime(timelineTime, 1);
-                            const sourceTime = activeFreeze ? activeFreeze.time || 0 : timelineToVideoTime(timelineTime);
+                    while (true) {
+                        const timelineTime = Math.min(duration, (performance.now() - start) / 1000);
+                        const activeFreeze = getFreezeAtTimelineTime(timelineTime + (0.5 / fps));
+                        const upcomingFreeze = activeFreeze ? null : getUpcomingFreezeAtTimelineTime(timelineTime, 1);
+                        const sourceTime = activeFreeze ? activeFreeze.time || 0 : timelineToVideoTime(timelineTime);
 
-                            if (activeFreeze) {
-                                if (!videoEl.paused) videoEl.pause();
-                            } else {
-                                const drift = Math.abs((videoEl.currentTime || 0) - sourceTime);
-                                if (!upcomingFreeze && drift > 0.55 && timelineTime - lastSyncAt > 0.5) {
-                                    lastSyncAt = timelineTime;
-                                    await waitForExportVideoSeek(videoEl, sourceTime);
-                                }
-                                if (videoEl.paused) await videoEl.play().catch(() => {});
+                        if (activeFreeze) {
+                            if (!videoEl.paused) videoEl.pause();
+                        } else {
+                            const drift = Math.abs((videoEl.currentTime || 0) - sourceTime);
+                            if (!upcomingFreeze && drift > 0.18 && timelineTime - lastSyncAt > 0.25) {
+                                lastSyncAt = timelineTime;
+                                await waitForExportVideoSeek(videoEl, sourceTime);
                             }
-
-                            drawFrame(sourceTime, activeFreeze);
-
-                            if (exportBtn) {
-                                const pct = Math.min(100, Math.round((timelineTime / Math.max(0.01, duration)) * 100));
-                                if (pct !== lastPct && pct % 5 === 0) {
-                                    lastPct = pct;
-                                    exportBtn.innerText = `Hizli render... %${pct}`;
-                                }
-                            }
-
-                            if (timelineTime >= duration) break;
-                            await nextExportFrame();
+                            if (videoEl.paused) await videoEl.play().catch(() => {});
                         }
-                    } catch (err) {
-                        loopError = err;
-                    } finally {
-                        videoEl.pause();
-                        if (recorderStarted && recorder.state !== 'inactive') recorder.stop();
+
+                        drawFrame(sourceTime, activeFreeze);
+
+                        if (exportBtn) {
+                            const pct = Math.min(100, Math.round((timelineTime / Math.max(0.01, duration)) * 100));
+                            if (pct !== lastPct && pct % 5 === 0) {
+                                lastPct = pct;
+                                exportBtn.innerText = `Akici render... %${pct}`;
+                            }
+                        }
+
+                        if (timelineTime >= duration) break;
+                        await nextExportFrame();
                     }
 
-                    const blob = recorderStarted ? await done : new Blob([], { type: mimeType });
+                    videoEl.pause();
+                    if (recorder.state !== 'inactive') recorder.stop();
+                    const blob = await done;
                     stream.getTracks().forEach(track => track.stop());
-                    chunks.length = 0;
-                    if (loopError) throw loopError;
-                    await downloadVideoBlob(blob, withVideoExtension(fileName, mimeType), saveHandle, savePath);
+                    await downloadVideoBlob(blob, fileName, saveHandle);
                 }
 
                 const PRO_VIDEO_EXPORT = {
-                    width: 1280,
-                    height: 720,
-                    fps: 30,
-                    frameQuality: 0.82,
-                    yieldEveryFrames: 2
+                    width: 1920,
+                    height: 1080,
+                    fps: 60,
+                    frameQuality: 0.9,
+                    yieldEveryFrames: 4
                 };
 
                 let selectedVideoExportFileHandle = null;
-                let selectedVideoExportFilePath = null;
                 const VIDEO_EXPORT_PRESETS = {
                     bitrate: {
                         minimum: { value: 8000000, frameQuality: 0.78 },
@@ -6265,13 +5876,13 @@
                 }
 
                 function getSelectedExportValue(group, fallback) {
-                    return document.querySelector(`[data-export-group="${group}"] .export-choice.active`).dataset.value || fallback;
+                    return document.querySelector(`[data-export-group="${group}"] .export-choice.active`)?.dataset.value || fallback;
                 }
 
                 function getVideoExportSettings() {
-                    const bitrateKey = getSelectedExportValue('bitrate', 'minimum');
-                    const resolutionKey = getSelectedExportValue('resolution', '720');
-                    const fps = Number(getSelectedExportValue('fps', '30')) || 30;
+                    const bitrateKey = getSelectedExportValue('bitrate', 'recommended');
+                    const resolutionKey = getSelectedExportValue('resolution', '1080');
+                    const fps = Number(getSelectedExportValue('fps', '60')) || 60;
                     const bitratePreset = VIDEO_EXPORT_PRESETS.bitrate[bitrateKey] || VIDEO_EXPORT_PRESETS.bitrate.recommended;
                     const resolution = VIDEO_EXPORT_PRESETS.resolution[resolutionKey] || VIDEO_EXPORT_PRESETS.resolution[1080];
                     return {
@@ -6282,55 +5893,29 @@
                         fps,
                         bitrate: bitratePreset.value,
                         frameQuality: bitratePreset.frameQuality,
-                        saveHandle: selectedVideoExportFileHandle,
-                        savePath: selectedVideoExportFilePath
+                        saveHandle: selectedVideoExportFileHandle
                     };
                 }
 
                 async function chooseVideoExportFile() {
-                    const mimeType = getSupportedVideoMime() || 'video/webm';
-                    const ext = getVideoMimeExtension(mimeType);
-                    const pickerMime = ext === 'mp4' ? 'video/mp4' : 'video/webm';
-                    const fileName = `${proSourceFileName || 'Clutch_VideoAnaliz_Edit'}_export.${ext}`;
-                    const label = document.getElementById('videoExportSaveLabel');
-
-                    try {
-                        if (window.showSaveFilePicker) {
-                            selectedVideoExportFileHandle = await window.showSaveFilePicker({
-                                suggestedName: fileName,
-                                types: [{ description: `${ext.toUpperCase()} Video`, accept: { [pickerMime]: [`.${ext}`] } }]
-                            });
-                            selectedVideoExportFilePath = null;
-                            if (label) label.innerText = selectedVideoExportFileHandle.name || fileName;
-                            return;
-                        }
-                    } catch (err) {
-                        if (err && err.name === 'AbortError') return;
-                        console.warn('Dosya secimi hatasi:', err);
+                    const fileName = `${proSourceFileName || 'Clutch_VideoAnaliz_Edit'}_export.webm`;
+                    if (!window.showSaveFilePicker) {
+                        selectedVideoExportFileHandle = null;
+                        const label = document.getElementById('videoExportSaveLabel');
+                        if (label) label.innerText = 'Bu ortam dosya konumu sectirmiyor; varsayilan indirme kullanilir.';
+                        if (typeof showToast === 'function') showToast('Dosya secimi desteklenmiyor, varsayilan indirme kullanilacak.');
+                        return;
                     }
-
                     try {
-                        const electron = typeof require === 'function' ? require('electron') : null;
-                        const result = electron && electron.ipcRenderer
-                            ? await electron.ipcRenderer.invoke('choose-video-export-path', { defaultName: fileName, ext })
-                            : null;
-                        if (result && !result.canceled && result.filePath) {
-                            selectedVideoExportFileHandle = null;
-                            selectedVideoExportFilePath = result.filePath;
-                            if (label) {
-                                const parts = String(result.filePath).split(/[\\/]/);
-                                label.innerText = parts[parts.length - 1] || fileName;
-                            }
-                            return;
-                        }
+                        selectedVideoExportFileHandle = await window.showSaveFilePicker({
+                            suggestedName: fileName,
+                            types: [{ description: 'WebM Video', accept: { 'video/webm': ['.webm'] } }]
+                        });
+                        const label = document.getElementById('videoExportSaveLabel');
+                        if (label) label.innerText = selectedVideoExportFileHandle.name || fileName;
                     } catch (err) {
-                        console.warn('Electron dosya secimi hatasi:', err);
+                        if (err && err.name !== 'AbortError') console.warn('Dosya secimi hatasi:', err);
                     }
-
-                    selectedVideoExportFileHandle = null;
-                    selectedVideoExportFilePath = null;
-                    if (label) label.innerText = 'Konum secilemedi, varsayilan indirme kullanilir.';
-                    if (typeof showToast === 'function') showToast('Dosya secimi acilamadi, varsayilan indirme kullanilacak.');
                 }
 
                 async function startVideoExportFromModal() {
@@ -6343,28 +5928,14 @@
                 }
 
                 function getFastExportCanvasSize(settings = null) {
-                    return { width: settings.width || PRO_VIDEO_EXPORT.width, height: settings.height || PRO_VIDEO_EXPORT.height };
-                }
-
-                function getVideoAnalysisComplexity() {
-                    const effectWeight = proDrawingSegments.reduce((sum, seg) => {
-                        const tool = seg.meta && seg.meta.tool;
-                        return sum + (['spotlight', 'tubeSpotlight', 'glow', 'zoomLens', 'blur', 'dimArea', 'routeSimulator'].includes(tool) ? 2 : 1);
-                    }, 0);
-                    return effectWeight + (proFreezes.length * 3);
-                }
-
-                function shouldUseStableExport(settings) {
-                    return proFreezes.length > 0 || getVideoAnalysisComplexity() >= 8 || (Number(settings.fps) || 30) > 30;
+                    return { width: settings?.width || PRO_VIDEO_EXPORT.width, height: settings?.height || PRO_VIDEO_EXPORT.height };
                 }
 
                 function drawVideo16x9(ctx, videoEl, canvasW, canvasH) {
-                    drawSource16x9(ctx, videoEl, videoEl.videoWidth || canvasW, videoEl.videoHeight || canvasH, canvasW, canvasH);
-                }
-
-                function drawSource16x9(ctx, source, sourceW, sourceH, canvasW, canvasH) {
                     ctx.fillStyle = '#000';
                     ctx.fillRect(0, 0, canvasW, canvasH);
+                    const sourceW = videoEl.videoWidth || canvasW;
+                    const sourceH = videoEl.videoHeight || canvasH;
                     const scale = Math.min(canvasW / sourceW, canvasH / sourceH);
                     const drawW = sourceW * scale;
                     const drawH = sourceH * scale;
@@ -6372,7 +5943,7 @@
                     const drawY = (canvasH - drawH) / 2;
                     ctx.imageSmoothingEnabled = true;
                     ctx.imageSmoothingQuality = 'high';
-                    ctx.drawImage(source, drawX, drawY, drawW, drawH);
+                    ctx.drawImage(videoEl, drawX, drawY, drawW, drawH);
                 }
 
                 function buildFixedFrameWebM(frames, width, height, fps) {
@@ -6440,7 +6011,7 @@
                         exportBtn.disabled = true;
                         exportBtn.innerText = 'Kare render hazirlaniyor...';
                     }
-                    showToast('Hizli render basladi. Maksimum 1 dakika video hazirlaniyor...');
+                    showToast('Hizli sabit kare render basladi. Maksimum 1 dakika WebM hazirlaniyor...');
 
                     await ensureClutchWatermarkLogo();
                     const exportCanvas = document.createElement('canvas');
@@ -6459,9 +6030,7 @@
                     const previousRate = proVideo.playbackRate;
                     const wasMuted = proVideo.muted;
                     const wasPaused = proVideo.paused;
-                    const previousActiveFreeze = activePlaybackFreeze;
-                    const previousActiveFreezeElapsed = activePlaybackFreezeElapsed;
-                    const wrapperRect = document.querySelector('.video-container-wrapper').getBoundingClientRect();
+                    const wrapperRect = document.querySelector('.video-container-wrapper')?.getBoundingClientRect();
                     const textOverlays = Array.from(document.querySelectorAll('.video-draggable-text')).map(el => {
                         const elRect = el.getBoundingClientRect();
                         const scaleX = wrapperRect ? exportCanvas.width / wrapperRect.width : 1;
@@ -6503,7 +6072,9 @@
                                 freezeCanvas.getContext('2d').putImageData(freezeContext.imageData, 0, 0);
                                 freezeContext._exportCanvasCache = freezeCanvas;
                             }
-                            drawSource16x9(expCtx, freezeContext._exportCanvasCache, freezeContext.imageData.width, freezeContext.imageData.height, exportCanvas.width, exportCanvas.height);
+                            const scaleX = exportCanvas.width / freezeContext.imageData.width;
+                            const scaleY = exportCanvas.height / freezeContext.imageData.height;
+                            expCtx.drawImage(freezeContext._exportCanvasCache, (freezeContext.offsetX || 0) * scaleX, (freezeContext.offsetY || 0) * scaleY, exportCanvas.width, exportCanvas.height);
                         }
                         proDrawingSegments
                             .filter(s => sourceTime >= s.startTime && sourceTime <= s.endTime)
@@ -6513,45 +6084,7 @@
                         drawClutchWatermark(expCtx, exportCanvas.width, exportCanvas.height);
                     }
 
-                    async function renderFixedFrameExport() {
-                        const virtualDuration = Math.min(getVirtualDuration() || proVideo.duration || 0, maxDuration);
-                        const totalFrames = Math.max(1, Math.ceil(virtualDuration * fps));
-                        const progressStep = Math.max(1, Math.floor(totalFrames / 50));
-                        await waitForExportVideoSeek(exportVideo, timelineToVideoTime(0));
-
-                        for (let frame = 0; frame < totalFrames; frame++) {
-                            const timelineTime = Math.min(virtualDuration, frame / fps);
-                            activeFreeze = getFreezeAtTimelineTime(timelineTime);
-                            const sourceTime = activeFreeze ? activeFreeze.time || 0 : timelineToVideoTime(timelineTime);
-                            await waitForExportVideoSeek(exportVideo, sourceTime);
-                            drawExportFrame(sourceTime, activeFreeze);
-                            frames.push(await canvasToVp8Frame(exportCanvas, frameQuality));
-                            if (exportBtn && (frame % progressStep === 0 || frame === totalFrames - 1)) {
-                                const pct = Math.min(100, Math.round(((frame + 1) / totalFrames) * 100));
-                                if (pct !== lastProgressUpdate) {
-                                    lastProgressUpdate = pct;
-                                    exportBtn.innerText = `Sabit render... %${pct}`;
-                                }
-                            }
-                            if (frame % PRO_VIDEO_EXPORT.yieldEveryFrames === 0) await delay(0);
-                        }
-
-                        if (exportBtn) exportBtn.innerText = 'Video birlestiriliyor...';
-                        const blob = buildFixedFrameWebM(frames, exportCanvas.width, exportCanvas.height, fps);
-                        const fallbackHandle = settings.saveHandle && String(settings.saveHandle.name || '').toLowerCase().endsWith('.webm') ? settings.saveHandle : null;
-                        const fallbackPath = settings.savePath && String(settings.savePath || '').toLowerCase().endsWith('.webm') ? settings.savePath : null;
-                        await downloadVideoBlob(blob, `${proSourceFileName || 'Clutch_VideoAnaliz_Edit'}_stable_${settings.resolutionKey || '1080'}p_${fps}fps.webm`, fallbackHandle, fallbackPath);
-                        frames.length = 0;
-                        showToast((getVirtualDuration() || 0) > maxDuration ? 'İlk 1 dakika sabit WebM indirildi.' : `${fps} FPS sabit WebM indirildi.`);
-                    }
-
                     try {
-                        if (!proVideo.paused) proVideo.pause();
-                        stopProPlaybackRenderLoop();
-                        stopProAnnotationAnimation();
-                        activePlaybackFreeze = null;
-                        activePlaybackFreezeElapsed = 0;
-
                         exportVideo.src = proVideo.currentSrc || proVideo.src;
                         exportVideo.muted = true;
                         exportVideo.playsInline = true;
@@ -6561,36 +6094,50 @@
                         await waitForExportVideoReady(exportVideo);
 
                         const virtualDuration = Math.min(getVirtualDuration() || proVideo.duration || 0, maxDuration);
-                        if (shouldUseStableExport(settings)) {
-                            showToast('Coklu arac/freeze algilandi, stabil render basladi...');
-                            if (exportBtn) exportBtn.innerText = 'Stabil render basliyor...';
-                            await renderFixedFrameExport();
-                        } else {
-                            const preferredMime = getSupportedVideoMime() || 'video/webm';
-                            const preferredExt = getVideoMimeExtension(preferredMime);
-                            if (exportBtn) exportBtn.innerText = 'Hizli render basliyor...';
-                            await recordSmoothRealtimeWebM(
-                                exportCanvas,
-                                exportVideo,
-                                (sourceTime, freezeContext) => drawExportFrame(sourceTime, freezeContext),
-                                virtualDuration,
-                                fps,
-                                `${proSourceFileName || 'Clutch_VideoAnaliz_Edit'}_${settings.resolutionKey || '1080'}p_${fps}fps.${preferredExt}`,
-                                exportBtn,
-                                settings.bitrate,
-                                settings.saveHandle,
-                                settings.savePath
-                            );
-                            showToast((getVirtualDuration() || 0) > maxDuration ? `İlk 1 dakika hızlı ${preferredExt.toUpperCase()} indirildi.` : `${fps} FPS ${preferredExt.toUpperCase()} indirildi.`);
-                        }
+                        if (exportBtn) exportBtn.innerText = 'Akici render basliyor...';
+                        await recordSmoothRealtimeWebM(
+                            exportCanvas,
+                            exportVideo,
+                            (sourceTime, freezeContext) => drawExportFrame(sourceTime, freezeContext),
+                            virtualDuration,
+                            fps,
+                            `${proSourceFileName || 'Clutch_VideoAnaliz_Edit'}_${settings.resolutionKey || '1080'}p_${fps}fps.webm`,
+                            exportBtn,
+                            settings.bitrate,
+                            settings.saveHandle
+                        );
+                        showToast((getVirtualDuration() || 0) > maxDuration ? 'Ilk 1 dakika akici WebM indirildi.' : 'Akici 60 FPS WebM indirildi.');
                     } catch (err) {
                         console.error('Video export hatasi:', err);
                         try {
-                            lastProgressUpdate = -1;
-                            frames.length = 0;
-                            showToast('Hizli render sorun cikardi, sabit yedek deneniyor...');
-                            if (exportBtn) exportBtn.innerText = 'Sabit yedek render...';
-                            await renderFixedFrameExport();
+                            showToast('Sabit kare yedek render deneniyor...');
+                            if (exportBtn) exportBtn.innerText = 'Sabit kare yedek...';
+                            const virtualDuration = Math.min(getVirtualDuration() || proVideo.duration || 0, maxDuration);
+                            const totalFrames = Math.max(1, Math.ceil(virtualDuration * fps));
+                            const progressStep = Math.max(1, Math.floor(totalFrames / 50));
+                            await waitForExportVideoSeek(exportVideo, 0);
+
+                            for (let frame = 0; frame < totalFrames; frame++) {
+                                const timelineTime = Math.min(virtualDuration, frame / fps);
+                                activeFreeze = getFreezeAtTimelineTime(timelineTime);
+                                const sourceTime = activeFreeze ? activeFreeze.time || 0 : timelineToVideoTime(timelineTime);
+                                await waitForExportVideoSeek(exportVideo, sourceTime);
+                                drawExportFrame(sourceTime, activeFreeze);
+                                frames.push(await canvasToVp8Frame(exportCanvas, frameQuality));
+                                if (exportBtn && (frame % progressStep === 0 || frame === totalFrames - 1)) {
+                                    const pct = Math.min(100, Math.round(((frame + 1) / totalFrames) * 100));
+                                    if (pct !== lastProgressUpdate) {
+                                        lastProgressUpdate = pct;
+                                        exportBtn.innerText = `Yedek render... %${pct}`;
+                                    }
+                                }
+                                if (frame % PRO_VIDEO_EXPORT.yieldEveryFrames === 0) await delay(0);
+                            }
+
+                            if (exportBtn) exportBtn.innerText = 'Video birlestiriliyor...';
+                            const blob = buildFixedFrameWebM(frames, exportCanvas.width, exportCanvas.height, fps);
+                            await downloadVideoBlob(blob, `${proSourceFileName || 'Clutch_VideoAnaliz_Edit'}_fixed_${settings.resolutionKey || '1080'}p_${fps}fps.webm`, settings.saveHandle);
+                            showToast('Yedek 60 FPS WebM indirildi.');
                         } catch (fallbackErr) {
                             console.error('Video fallback export hatasi:', fallbackErr);
                             showToast('Video hazirlanirken hata olustu.');
@@ -6607,23 +6154,8 @@
                         proVideo.playbackRate = previousRate;
                         proVideo.muted = wasMuted;
                         await waitForVideoSeek(previousTime);
-                        activePlaybackFreeze = previousActiveFreeze;
-                        activePlaybackFreezeElapsed = previousActiveFreezeElapsed;
                         if (!wasPaused) proVideo.play().catch(() => {});
-                        frames.length = 0;
-                        textOverlays.length = 0;
-                        proFreezes.forEach(f => {
-                            if (f._exportCanvasCache) {
-                                f._exportCanvasCache.width = 1;
-                                f._exportCanvasCache.height = 1;
-                                delete f._exportCanvasCache;
-                            }
-                        });
-                        exportCanvas.width = 1;
-                        exportCanvas.height = 1;
-                        stopProAnnotationAnimation();
                         renderAnnotationsOnVideo();
-                        updateTimelineUi();
                     }
                 }
 
@@ -6862,7 +6394,7 @@
                 }
 
                 async function deleteHandout(id) {
-                    if (!confirm("Bu raporu silmek istediğinize emin misiniz")) return;
+                    if (!confirm("Bu raporu silmek istediğinize emin misiniz?")) return;
                     await db.handouts.delete(id);
                     renderHandouts();
                     showToast("Rapor silindi.");
@@ -7026,7 +6558,7 @@
                 }
 
                 async function deleteBireysel(id) {
-                    if (confirm('Bu sporcuyu silmek istiyor musunuz')) {
+                    if (confirm('Bu sporcuyu silmek istiyor musunuz?')) {
                         await db.bireysel.delete(Number(id));
                         showToast('Sporcu silindi.');
                         renderBireysel();
@@ -7050,15 +6582,13 @@
                             const pct = Math.round(((p.totalLessons - p.remainingLessons) / p.totalLessons) * 100);
                             const barColor = p.remainingLessons === 0 ? 'var(--danger)' : p.remainingLessons <= 2 ? '#f1c40f' : 'var(--success)';
                             const warningBadge = p.remainingLessons === 0
-                                ?
-                                 `<span class="tag danger">⚠️ DERS BİTTİ</span>`
+                                ? `<span class="tag danger">⚠️ DERS BİTTİ</span>`
                                 : p.remainingLessons <= 2
                                     ? `<span class="tag" style="background:rgba(241,196,15,0.1);color:#f1c40f;border-color:#f1c40f;">⚠️ ${p.remainingLessons} DERS KALDI</span>`
                                     : `<span class="tag success">${p.remainingLessons} ders kaldı</span>`;
 
                             const sessionsHtml = p.sessions.length > 0
-                                ?
-                                 p.sessions.slice(-5).reverse().map(s =>
+                                ? p.sessions.slice(-5).reverse().map(s =>
                                     `<span style="font-size:11px;background:rgba(255,255,255,0.05);padding:3px 8px;border-radius:4px;color:#aaa;">📅 ${s.date}</span>`
                                 ).join('')
                                 : `<span style="font-size:12px;color:#555;">Henüz antrenman girilmedi.</span>`;
@@ -7331,7 +6861,7 @@
                                     const dateStr = m.date ? new Date(m.date).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' }) : '';
                                     return `<div class="dash-match-item">
                                     <div>
-                                        <div class="dash-match-teams">vs ${m.opponent || ''}</div>
+                                        <div class="dash-match-teams">vs ${m.opponent || '?'}</div>
                                         <div class="dash-match-date">${dateStr}</div>
                                     </div>
                                     <div class="dash-match-score ${isWin ? 'win' : 'loss'}">${m.score || '-'}</div>
@@ -7552,7 +7082,7 @@
                 }
 
                 async function deleteTraining(id) {
-                    if (confirm('Bu antrenman kaydını silmek istediğinize emin misiniz')) {
+                    if (confirm('Bu antrenman kaydını silmek istediğinize emin misiniz?')) {
                         await db.trainings.delete(Number(id));
                         showToast('Antrenman kaydı silindi.');
                         renderTrainingTracker();
@@ -7560,7 +7090,7 @@
                 }
 
                 async function clearAllTrainings() {
-                    if (confirm('Tüm antrenman kayıtlarını silmek istediğinize emin misiniz Bu işlem geri alınamaz!')) {
+                    if (confirm('Tüm antrenman kayıtlarını silmek istediğinize emin misiniz? Bu işlem geri alınamaz!')) {
                         const keys = await db.trainings.where('teamId').equals(window.activeTeamId || 1).primaryKeys();
                         if (keys.length) await db.trainings.bulkDelete(keys);
                         showToast('Tüm antrenman kayıtları temizlendi.');
@@ -7926,7 +7456,7 @@
             <input type="hidden" id="modalBireyselId">
 
             <div class="form-group">
-                <label>İdman Ne Zaman Yapıldı</label>
+                <label>İdman Ne Zaman Yapıldı?</label>
                 <input type="date" id="bSessionDate"
                     style="width: 100%; padding: 12px 16px; background: var(--bg-dark); border: 1px solid #333; border-radius: 8px; color: white; font-size: 14px; outline: none;">
             </div>
@@ -8353,7 +7883,7 @@
 
             function trimBalleSnippet(text, terms) {
                 const clean = (text || '').replace(/\s+/g, ' ').trim();
-                const sentences = clean.split(/(<=[.!])\s+/);
+                const sentences = clean.split(/(?<=[.!?])\s+/);
                 const normalizedTerms = terms.map(normalizeBalleText);
                 const picked = sentences.find(sentence => {
                     const normalizedSentence = normalizeBalleText(sentence);
@@ -8404,7 +7934,7 @@
 
                 // ANTRENMAN PROGRAMI
                 if (ql.includes('antrenman') && (ql.includes('program') || ql.includes('plan'))) {
-                    const age = ql.match(/u-(\d+)/i);
+                    const age = ql.match(/u-?(\d+)/i);
                     const ageGroup = age ? age[1] : '14';
                     return `🏀 <strong>U-${ageGroup} Haftalık Antrenman Programı</strong><br><br>
 <strong>Pazartesi:</strong> Isınma (10dk) → Bireysel Teknik (15dk) → 3'e 3 oyun (20dk) → Streching (10dk)<br><br>
@@ -8662,10 +8192,10 @@ Gelişmiş bir yardımcı antrenör olarak sana farklı ekollerin odak noktalar�
                 if (ql.includes('rakip analiz') || ql.includes('scout') || ql.includes('maç raporu') || ql.includes('analiz raporu')) {
                     return `📋 <strong>Gelişmiş Rakip Analizi (Scouting) Raporu Hazırlama</strong><br><br>
 Bir yardımcı antrenör olarak rakip analizinde şu 4 kritere odaklanmalısın:<br><br>
-1️⃣ <strong>Hücum Eğilimleri (Tendencies):</strong> Rakip oyun kurucu (PG) Pick & Roll oynadığında % kaç sağa, % kaç sola gidiyor Şutörler perdelerden (off-screen) hangi açıyla çıkmayı (curl, flare, straight) seviyor<br>
-2️⃣ <strong>Geçiş Hücumu (Transition):</strong> Topu kim getiriyor İlk pası kime atıyorlar (Outlet Pass) Geri koşmayan tembel oyuncuları var mı Varsa kimi koşturarak yormalıyız<br>
-3️⃣ <strong>Savunma Zaafiyetleri:</strong> Hangi oyuncuları "Closeout" (kapanma) durumlarında yavaş veya dengesiz kalıyor Hangi uzun oyuncuyu Drop savunmasına zorlayıp orta mesafe (mid-range) şutla cezalandırabiliriz<br>
-4️⃣ <strong>ATO (After Timeout) Setleri:</strong> Moladan veya çeyrek başlarından dönüşte rakip koç genellikle kimi topla buluşturmak istiyor En güvendikleri "Go-To" setleri nedir<br><br>
+1️⃣ <strong>Hücum Eğilimleri (Tendencies):</strong> Rakip oyun kurucu (PG) Pick & Roll oynadığında % kaç sağa, % kaç sola gidiyor? Şutörler perdelerden (off-screen) hangi açıyla çıkmayı (curl, flare, straight) seviyor?<br>
+2️⃣ <strong>Geçiş Hücumu (Transition):</strong> Topu kim getiriyor? İlk pası kime atıyorlar (Outlet Pass)? Geri koşmayan tembel oyuncuları var mı? Varsa kimi koşturarak yormalıyız?<br>
+3️⃣ <strong>Savunma Zaafiyetleri:</strong> Hangi oyuncuları "Closeout" (kapanma) durumlarında yavaş veya dengesiz kalıyor? Hangi uzun oyuncuyu Drop savunmasına zorlayıp orta mesafe (mid-range) şutla cezalandırabiliriz?<br>
+4️⃣ <strong>ATO (After Timeout) Setleri:</strong> Moladan veya çeyrek başlarından dönüşte rakip koç genellikle kimi topla buluşturmak istiyor? En güvendikleri "Go-To" setleri nedir?<br><br>
 💡 <i>Clutch App'teki "Maçlar" sekmesinde yer alan istatistik modülünü rakip verilerini girmek için kullanabilirsin.</i>`;
                 }
 
@@ -8675,7 +8205,7 @@ Bir yardımcı antrenör olarak rakip analizinde şu 4 kritere odaklanmalısın:
 Her oyuncuya özel 4 ayaklı gelişim planı oluşturmalısın:<br><br>
 1️⃣ <strong>Teknik Beceri Hedefi:</strong> Oyuncunun en zayıf olduğu 1-2 teknik beceriyi belirle. Örn: Sol el layup, catch & shoot.<br>
 2️⃣ <strong>Fiziksel Gelişim:</strong> Boy, kilo, wingspan takibi (Clutch'taki Takım modülünü kullan!). Hedef: 3 ayda dikey sıçrama +3cm.<br>
-3️⃣ <strong>Basketbol IQ:</strong> Film izleme ödevi ver! Haftada 1 maç analizi. "Bu pozisyonda ne yapardın" sorusu sor.<br>
+3️⃣ <strong>Basketbol IQ:</strong> Film izleme ödevi ver! Haftada 1 maç analizi. "Bu pozisyonda ne yapardın?" sorusu sor.<br>
 4️⃣ <strong>Mental Hedef:</strong> Maç başına top kaybını 3'ün altına indir, serbest atış rutini oluştur.<br><br>
 📊 <strong>Takip:</strong> Her 4 haftada oyuncuyla birebir oturup gelişimi değerlendir. Clutch'taki Bireysel Antrenörlük modülünü kullan!<br><br>
 🔑 Altın Kural: <strong>"Zayıf yönlerini güçlendir, güçlü yönlerini silahlaştır!"</strong>`;
@@ -8744,9 +8274,9 @@ En sık karşılaşılan basketbol sakatlıkları ve önleme yolları:<br><br>
                     return `Merhaba Koç! 🏀 Ben BALL-E, gelişmiş yardımcı antrenörünüz ve basketbol zekanızım. Size dünya standartlarında veriler sunabilirim.<br><br>Bana şu konularda danışabilirsiniz:<br>
 • "TBF altyapı standartları ve antrenman verileri"<br>
 • "Dünya basketbolu ve İspanyol/Sırp ekolleri"<br>
-• "Gelişmiş rakip analizi (Scouting) nasıl yapılır"<br>
+• "Gelişmiş rakip analizi (Scouting) nasıl yapılır?"<br>
 • "Pick and roll savunması (Hedge, Drop, Switch)"<br>
-• "Oyuncu gelişim planı nasıl hazırlanır"<br>
+• "Oyuncu gelişim planı nasıl hazırlanır?"<br>
 • "Sakatlık önleme protokolü"<br>
 • "Zone savunma sistemleri"<br>
 • "Eğlenceli antrenman oyunları"<br>
@@ -8876,7 +8406,7 @@ Lütfen bana spesifik bir soru sor! 🤖`;
             function updateProFullscreenButton() {
                 var btn = document.getElementById('proFullscreenBtn');
                 if (!btn) return;
-                btn.innerText = getActiveVideoFullscreen() ? '⛶ Çık' : '⛶ Tam Ekran';
+                btn.innerText = getActiveVideoFullscreen() ? '⛶ Cik' : '⛶ Tam Ekran';
                 syncProFullscreenTimeline();
             }
 
